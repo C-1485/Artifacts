@@ -10,7 +10,7 @@ theme = 'nightfall'
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
-      unsafe = false # escape all raw html
+      unsafe = true # escape all raw html, set true to allow
 
 [pagination]
 pagerSize = 3
@@ -31,7 +31,7 @@ hostname = 'artifacts.io'
 
 openLinksInNewTab = true
 
-showReadingTime = false
+showReadingTime = true
 
 [params.styles]
 color = 'red'
