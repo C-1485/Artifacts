@@ -1,0 +1,42 @@
+baseURL = 'http://localhost:1313/'
+languageCode = 'en-us'
+title = 'artifacts'
+theme = 'nightfall'
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = false # escape all raw html
+
+[pagination]
+pagerSize = 3
+
+[menu]
+    [[menu.header]]
+        name = 'about'
+        weight = 0
+        url = '/about'
+    [[menu.header]]
+        name = 'captures'
+        weight = 1
+        url = '/captures'
+
+[params]
+user = 'C-1485'
+hostname = 'artifacts.io'
+
+openLinksInNewTab = true
+
+[params.styles]
+color = 'red'
+
+[params.author]
+    name = 'ARTIFACTS'
+
+[[params.social]]
+key = 0
+name = 'github'
+
+[[params.social]]
+key = 1
+name = 'email'

@@ -1,0 +1,9 @@
+<footer class="footer">
+    {{ with .Site.Params.footerHtml }}
+        <span>{{ . | safeHTML }}</span>
+    {{ else }}
+        <span>
+            ♣ ♦ ♠ ♥ 
+        </span>
+    {{ end }}
+</footer>

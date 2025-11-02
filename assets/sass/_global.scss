@@ -1,0 +1,98 @@
+@use "utils/variables" as v;
+
+body {
+  font-family: v.$fontParagraph;
+  color: v.$white;
+  background-color: v.$backgroundDark;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  animation: theme 21s linear infinite;
+  overflow: hidden;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vmax;
+    height: 100vmax;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.05);
+    animation: background 90s linear infinite;
+  }
+
+  &::after {
+    right: 15vw;
+    animation-delay: -30s;
+    animation-direction: reverse;
+  }
+
+  /* ✅ Third, smaller rotating layer */
+  &::marker { /* “fake” extra pseudo-element */
+    content: '';
+    position: fixed;
+    z-index: -2;
+    top: 50%;
+    left: 50%;
+    width: 25vmax;  /* smaller rectangle */
+    height: 25vmax;
+    background: rgba(255,255,255,0.05);
+    transform: translate(-25%, -25%);
+    animation: background-reverse 60s linear infinite;
+  }
+}
+
+@keyframes theme {
+  0%   { background: #BE4E41; }
+  16%  { background: #9C4035; }
+  33%  { background: #BF4A40; }
+  50%  { background: #CA6D63; }
+  66%  { background: #9C4035; }
+  83%  { background: #BF4A40; }
+  100% { background: #BE4E41; }
+}
+
+@keyframes background {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes background-reverse {
+  0%   { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+a {
+  @include v.primary-color;
+}
+
+pre code {
+  font-family: v.$fontCode;
+  font-size: 75%;
+  display: block;
+  background: v.$backgroundDarker;
+  padding: 10px;
+  overflow: auto;
+}
+
+code {
+  font-family: v.$fontCode;
+  font-size: 75%;
+}
+
+@for $i from 1 through 6 {
+  h#{$i} {
+    font-family: v.$fontHeader;
+  }
+}
+
+@-ms-viewport{
+  width: device-width;
+}
+
+/* ---- */
+
