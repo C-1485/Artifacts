@@ -3,6 +3,10 @@ languageCode = 'en-us'
 title = 'artifacts'
 theme = 'nightfall'
 
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
+
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
