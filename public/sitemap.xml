@@ -14,11 +14,9 @@
     <loc>http://localhost:1313/posts/</loc>
     <lastmod>2025-11-01T02:42:28+02:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/components/c/</loc>
+    <loc>http://localhost:1313/components/c-sdl2/</loc>
   </url><url>
     <loc>http://localhost:1313/components/</loc>
-  </url><url>
-    <loc>http://localhost:1313/components/sdl2/</loc>
   </url><url>
     <loc>http://localhost:1313/posts/sdlbits/</loc>
   </url>
