@@ -16,28 +16,31 @@ theme = 'nightfall'
 pagerSize = 3
 
 [menu]
-    [[menu.header]]
-        name = 'about'
-        weight = 0
-        url = '/about'
-    [[menu.header]]
-        name = 'captures'
-        weight = 1
-        url = '/captures'
+  [[menu.header]]
+    name = 'about'
+    weight = 0
+    url = '/about'
+  [[menu.header]]
+    name = 'posts'
+    weight = 1
+    url = '/posts'
+
+[taxonomies]
+component = "components"
 
 [params]
 user = 'C-1485'
 hostname = 'artifacts.io'
 
+showPublishedDate = false
 openLinksInNewTab = true
-
 showReadingTime = true
 
 [params.styles]
 color = 'red'
 
 [params.author]
-    name = 'ARTIFACTS'
+name = 'ARTIFACTS'
 
 [[params.social]]
 key = 0
