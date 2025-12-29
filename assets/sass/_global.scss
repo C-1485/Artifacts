@@ -9,7 +9,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   animation: theme 21s linear infinite;
-  overflow: hidden;
+  overflow: auto;
   position: relative;
 
   &::before,

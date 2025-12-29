@@ -3,7 +3,7 @@
 
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <title>
-  Components | ARTIFACTS
+captures | ARTIFACTS
 </title>
 
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -13,9 +13,9 @@
 <meta name="generator" content="Hugo 0.152.2">
 
 
-<link rel="canonical" href="http://localhost:1313/components/" >
-  <link href="http://localhost:1313/components/index.xml" rel="alternate" type="application/rss+xml" title="artifacts" >
-  <link href="http://localhost:1313/components/index.xml" rel="feed" type="application/rss+xml" title="artifacts" >
+<link rel="canonical" href="http://localhost:1313/captures/" >
+  <link href="http://localhost:1313/captures/index.xml" rel="alternate" type="application/rss+xml" title="artifacts" >
+  <link href="http://localhost:1313/captures/index.xml" rel="feed" type="application/rss+xml" title="artifacts" >
 
 
 
@@ -66,9 +66,10 @@
         <div class="content">
             <main class="main">
                 
+
 <div>
   <div class="listHeader">
-    <h1>Components</h1>
+    <h1>captures</h1>
   </div>
 
   
@@ -76,24 +77,49 @@
   
   
 
-  
-    <div role="list">
-      
-        <div class="postListItem" role="listitem">
-          <a class="postListLink" href="http://localhost:1313/components/c-sdl2/">
-            <div class="postHeader">
-              <span class="postTitle">c sdl2</span>
-              <span class="postDate">(1)</span>
-            </div>
-          </a>
-          <div class="postExcerpt">
-            <p>posts with term: c sdl2</p>
+  <div role="list">
+    
+      <div class="postListItem" role="listitem">
+        <a class="postListLink" href="http://localhost:1313/captures/twomillion/">
+          <div class="postHeader">
+            <span class="postTitle">TwoMillion</span>
+            
+            
+            <time class="postDate" datetime="0001-01-01">0001-01-01</time>
           </div>
+          
+          
+          
+          
+          
+          <div class="readingTime">
+            reading time: 2 minutes
+          </div>
+          
+        </a>
+        <div class="postExcerpt">
+          <hr>
+<p>Nmap scan the target for available TCP ports</p>
+<p><img src="/captures/screens/TwoMillion/shot-001.png" alt="nmap scan"></p>
+<hr>
+<p>To be able to view the website in browser the target IP must be resolved by creating a domain mapping in /etc/hosts</p>
+<p><img src="/captures/screens/TwoMillion/shot-002.png" alt="/etc/hosts"></p>
+<hr>
+<p>We run burpsuite and examine the available path of the target under the &rsquo;target&rsquo; tab</p>
+<p>Under 
+<a href="http://2million.htb/invite" target="_blank" rel="noopener">http://2million.htb/invite</a>
+ it is observed that an invite code is required for Sign Up</p>
+<p><img src="/captures/screens/TwoMillion/shot-003.png" alt="/invite"></p>
+<p>After further examination of the website&rsquo;s source, under js/invite.min.js an eval based javascript packer obfuscation script is found in the response window of burpsuite.</p>
         </div>
-      
-    </div>
-  
+      </div>
+    
+  </div>
+
+
+
 </div>
+
 
             </main>
         </div>

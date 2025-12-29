@@ -24,6 +24,10 @@ pagerSize = 3
     name = 'posts'
     weight = 1
     url = '/posts'
+  [[menu.header]]
+    name = 'captures'
+    weight = 2
+    url = '/captures'
 
 [taxonomies]
 component = "components"

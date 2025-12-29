@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <title>
+TwoMillion | ARTIFACTS
+</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+
+<meta name="generator" content="Hugo 0.152.2">
+
+
+<link rel="canonical" href="http://localhost:1313/captures/twomillion/" >
+
+
+
+
+<link href="/css/style.min.b2219dd89d90a11a5d98117f8c30d449377dec34f0afd572d006bdc58cc2dd97.css" rel="stylesheet">
+
+
+
+
+</head>
+
+<body>
+
+    <div class="flexWrapper">
+        <header class="headerWrapper">
+    <div class="header">
+        <div>
+            <a class="terminal" href="/">
+                <span>C-1485@artifacts.io ~ $</span>
+            </a>
+        </div>
+        <input class="side-menu" type="checkbox" id="side-menu">
+        <label class="hamb" for="side-menu"><span class="hamb-line"></span></label>
+        <nav class="headerLinks">
+            <ul>
+                
+                <li>
+                    <a href="http://localhost:1313/posts" title="" >
+                        ~/posts</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:1313/captures" title="" >
+                        ~/captures</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:1313/about" title="" >
+                        ~/about</a>
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="content">
+            <main class="main">
+                
+<div class="postWrapper">
+    <h1>TwoMillion</h1>
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    <section class="postMetadata">
+        <dl>
+            
+            
+            
+            
+            
+            
+                <dt>reading time</dt>
+                <dd>2 minutes</dd>
+            
+        </dl>
+    </section>
+    
+    <div>
+        <hr>
+<p>Nmap scan the target for available TCP ports</p>
+<p><img src="/captures/screens/TwoMillion/shot-001.png" alt="nmap scan"></p>
+<hr>
+<p>To be able to view the website in browser the target IP must be resolved by creating a domain mapping in /etc/hosts</p>
+<p><img src="/captures/screens/TwoMillion/shot-002.png" alt="/etc/hosts"></p>
+<hr>
+<p>We run burpsuite and examine the available path of the target under the &rsquo;target&rsquo; tab</p>
+<p>Under 
+<a href="http://2million.htb/invite" target="_blank" rel="noopener">http://2million.htb/invite</a>
+ it is observed that an invite code is required for Sign Up</p>
+<p><img src="/captures/screens/TwoMillion/shot-003.png" alt="/invite"></p>
+<p>After further examination of the website&rsquo;s source, under js/invite.min.js an eval based javascript packer obfuscation script is found in the response window of burpsuite.</p>
+<p><img src="/captures/screens/TwoMillion/shot-004.png" alt="obfuscated script"></p>
+<p>Utilizing 
+<a href="https://tunganhken.github.io/de4js/" target="_blank" rel="noopener">https://tunganhken.github.io/de4js/</a>
+ the obfuscated JavaScript was deobfuscated and beautified, revealing functions that directly invoke backend API endpoints.</p>
+<p><img src="/captures/screens/TwoMillion/shot-005.png" alt="beautified script"></p>
+<p>Then using curl a POST request is sent to the backend endpoint, with a ROT13 cipher &lsquo;data&rsquo; value.</p>
+<p><img src="/captures/screens/TwoMillion/shot-006.png" alt="rot13 cipher"></p>
+<p>
+<a href="https://cryptii.com/pipes/rot13-decoder" target="_blank" rel="noopener">https://cryptii.com/pipes/rot13-decoder</a>
+ is a web tool that helped with the decipher of the provided ROT13.</p>
+<p>The cipher&rsquo;s output:</p>
+<ul>
+<li>In order to generate the invite code, make a POST request to /api/v1/invite/generate</li>
+</ul>
+<p>Thus, we test the newly found endpoint resulting to a base64 encoded &lsquo;code&rsquo; value.</p>
+<p><img src="/captures/screens/TwoMillion/shot-007.png" alt="base64 encoded"></p>
+<p>The encoded string can be decoded with 
+<a href="https://www.base64decode.org/" target="_blank" rel="noopener">https://www.base64decode.org/</a>
+.</p>
+<p>The decoded string based on the generated base64 encoding:</p>
+<ul>
+<li>X43BI-41KBY-4HMSL-SYVEG</li>
+</ul>
+<p>Once the decoded string is filled in the empty box of /invite, we get redirected to /register for registration. Next, the appropriate details are entered in /login and access to our personal /home page is granted.</p>
+<p><img src="/captures/screens/TwoMillion/shot-008.png" alt="/home"></p>
+
+    </div>
+</div>
+
+            </main>
+        </div>
+
+
+        <footer class="footer">
+    
+        <span>
+            ♣ ♦ ♠ ♥ 
+        </span>
+    
+</footer>
+    </div>
+
+</body>
+
+</html>
