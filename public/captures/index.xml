@@ -13,7 +13,7 @@
       <link>http://localhost:1313/captures/twomillion/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/captures/twomillion/</guid>
-      <description>&lt;hr&gt;&#xA;&lt;p&gt;Nmap scan the target for available TCP ports&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/captures/screens/TwoMillion/shot-001.png&#34; alt=&#34;nmap scan&#34;&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;To be able to view the website in browser the target IP must be resolved by creating a domain mapping in /etc/hosts&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/captures/screens/TwoMillion/shot-002.png&#34; alt=&#34;/etc/hosts&#34;&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;We run burpsuite and examine the available path of the target under the &amp;rsquo;target&amp;rsquo; tab&lt;/p&gt;&#xA;&lt;p&gt;Under &#xA;&lt;a href=&#34;http://2million.htb/invite&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;http://2million.htb/invite&lt;/a&gt;&#xA; it is observed that an invite code is required for Sign Up&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/captures/screens/TwoMillion/shot-003.png&#34; alt=&#34;/invite&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;After further examination of the website&amp;rsquo;s source, under js/invite.min.js an eval based javascript packer obfuscation script is found in the response window of burpsuite.&lt;/p&gt;</description>
+      <description>&lt;p&gt;This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

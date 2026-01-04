@@ -1,19 +1,21 @@
 ---
 title: "TwoMillion"
+machine: "TwoMillion"
 draft: false
 ---
-
+This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.
+<!--more-->
 ---
 
 Nmap scan the target for available TCP ports
 
-![nmap scan](/captures/screens/TwoMillion/shot-001.png)
+{{< screenshots "shot-001" >}}
 
 ---
 
 To be able to view the website in browser the target IP must be resolved by creating a domain mapping in /etc/hosts
 
-![/etc/hosts](/captures/screens/TwoMillion/shot-002.png)
+{{< screenshots "shot-002" >}}
 
 ---
 

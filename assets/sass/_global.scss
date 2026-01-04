@@ -31,7 +31,7 @@ body {
     animation-direction: reverse;
   }
 
-  /* ✅ Third, smaller rotating layer */
+  /* third, smaller rotating layer */
   &::marker { /* “fake” extra pseudo-element */
     content: '';
     position: fixed;
