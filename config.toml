@@ -30,6 +30,7 @@ pagerSize = 3
     url = '/captures'
 
 [taxonomies]
+tags = "tags"
 component = "components"
 
 [params]
@@ -39,6 +40,7 @@ hostname = 'artifacts.io'
 showPublishedDate = false
 openLinksInNewTab = true
 showReadingTime = true
+showTags = true
 
 [params.styles]
 color = 'red'

