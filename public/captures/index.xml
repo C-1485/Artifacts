@@ -9,6 +9,13 @@
     <lastBuildDate>Mon, 01 Jan 0001 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/captures/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>MonitorsFour</title>
+      <link>http://localhost:1313/captures/monitorsfour/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/captures/monitorsfour/</guid>
+      <description>&lt;h4 id=&#34;write-up-for-the-hackthebox-machine---monitorsfour&#34;&gt;Write-Up for the HackTheBox Machine - MonitorsFour&lt;/h4&gt;</description>
+    </item>
+    <item>
       <title>TwoMillion</title>
       <link>http://localhost:1313/captures/twomillion/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>

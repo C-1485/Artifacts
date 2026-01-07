@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <title>
+MonitorsFour | ARTIFACTS
+</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+
+<meta name="generator" content="Hugo 0.152.2">
+
+
+<link rel="canonical" href="http://localhost:1313/captures/monitorsfour/" >
+
+
+
+
+<link href="/css/style.min.5f46e10d3d75c0ba6553d0749280b20ce50648a191585d2b90bfa5a77f1653cd.css" rel="stylesheet">
+
+
+
+
+</head>
+
+<body>
+
+    <div class="flexWrapper">
+        <header class="headerWrapper">
+    <div class="header">
+        <div>
+            <a class="terminal" href="/">
+                <span>C-1485@artifacts.io ~ $</span>
+            </a>
+        </div>
+        <input class="side-menu" type="checkbox" id="side-menu">
+        <label class="hamb" for="side-menu"><span class="hamb-line"></span></label>
+        <nav class="headerLinks">
+            <ul>
+                
+                <li>
+                    <a href="http://localhost:1313/posts" title="" >
+                        ~/posts</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:1313/captures" title="" >
+                        ~/captures</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:1313/about" title="" >
+                        ~/about</a>
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="content">
+            <main class="main">
+                
+<div class="postWrapper">
+    <h1>MonitorsFour</h1>
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    <section class="postMetadata">
+        <dl>
+            
+                <dt>tags</dt>
+<dd><span></span>HackTheBox Machines</dd>
+            
+            
+            
+            
+            
+            
+                <dt>reading time</dt>
+                <dd>1 minute</dd>
+            
+        </dl>
+    </section>
+    
+    <div>
+        <h4 id="write-up-for-the-hackthebox-machine---monitorsfour">Write-Up for the HackTheBox Machine - MonitorsFour</h4>
+<hr>
+<h4 id="001-scan">001: Scan</h4>
+<p>The victim machine was scanned using <code>nmap</code>.
+Ports returned from the tool were <code>port 80(http)</code> and <code>port 5985 (winrm)</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nmap -sC -sV -p- 10.10.11.98
+</span></span></code></pre></div><p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-001.png" alt="shot-001">
+</p>
+<hr>
+<h4 id="002-hostname-mapping">002: Hostname Mapping</h4>
+<p>Then, the IP of the victim is added to <code>/etc/hosts</code> and mapped to <code>monitorsfour.htb</code> for local hostanme resolution.
+Thus, the website was viewed in browser for further examination.</p>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-002.png" alt="shot-002">
+</p>
+<hr>
+<h4 id="003-virtual-hosts">003: Virtual Hosts</h4>
+<p>As the <code>nmap</code> report showed that the application was running on nginx, additional reconnaissance for the discovery of hidden files and subdomains was made using <code>ffuf</code>.
+<code>common.txt</code> wordlist exposed various paths, but what seemed most interesting was the <strong>Warning</strong> from <code>/contact</code> response.</p>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-003.png" alt="shot-003">
+</p>
+<p>Initially, the response appeared like a hint that the victim may be vulnerable to File Inclusion.
+But after some common LFI probes to <code>/contact</code> and <code>/Router</code>, no results were found of potential vulnerability.
+However, <code>/Router.php</code> when tested in <code>burpsuite</code> all responses returned <code>200 OK</code>, meaning that requests were handled on the server.</p>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-004.png" alt="shot-004">
+</p>
+<p>Due to the absence of additional DNS records and the presence of generic content on the default host, virtual host enumeration was performed by fuzzing the Host header. This revealed an additional virtual host serving distinct content not accessible via standard DNS resolution.</p>
+    </div>
+</div>
+
+            </main>
+        </div>
+
+
+        <footer class="footer">
+    
+        <span>
+            ♣ ♦ ♠ ♥ 
+        </span>
+    
+</footer>
+    </div>
+
+</body>
+
+</html>

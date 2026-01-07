@@ -1,5 +1,5 @@
 ---
-title: TwoMillion
+title: "TwoMillion"
 machine: TwoMillion
 tags: HackTheBox Machines
 ---
@@ -11,7 +11,6 @@ tags: HackTheBox Machines
 The victim machine was scanned for potential open ports and services using `nmap`.
 Available ports and services, according to the tool was `port 22(ssh)` and `port 80(http)`.
 
-**Command:**
 ```bash
 nmap -sT 10.10.11.221
 ```
