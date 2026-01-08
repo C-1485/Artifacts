@@ -26,10 +26,15 @@ Thus, the website was viewed in browser for further examination.
 {{< screenshots "shot-002" >}}
 
 ---
-#### 003: Virtual Hosts
+#### 003: Victim Fuzz
 
 As the `nmap` report showed that the application was running on nginx, additional reconnaissance for the discovery of hidden files and subdomains was made using `ffuf`.
 `common.txt` wordlist exposed various paths, but what seemed most interesting was the **Warning** from `/contact` response.
+
+```bash
+ffuf -u http://monitorsfour.htb/FUZZ -w /usr/share/wordlists/seclists/Discovery/Web-Content/common.txt -ac
+```
+- `-ac` | switch specifies auto-calibration, which filters out false positive responses
 
 {{< screenshots "shot-003" >}}
 
@@ -39,4 +44,25 @@ However, `/Router.php` when tested in `burpsuite` all responses returned `200 OK
 
 {{< screenshots "shot-004" >}}
 
-Due to the absence of additional DNS records and the presence of generic content on the default host, virtual host enumeration was performed by fuzzing the Host header. This revealed an additional virtual host serving distinct content not accessible via standard DNS resolution.
+---
+#### 004: Virtual Host
+
+`/Router.php` was assumed to be a front controller, since it is explicitly named `Router` and calls a prefix path `/var/www/app/`, which basically implied a centralized request handler to other website components. 
+Hence, with `ffuf` the victim was probed for hidden subdomains.
+
+```bash
+ffuf -u http://FUZZ.monitorsfour.htb/ -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -ac
+```
+
+Enumeration for DNS subdomains returned nothing.
+But, then the logical next step was probing for any virtual host.
+After few seconds virtual host `cacti` was found with a redirection status `302`.
+
+```bash
+ffuf -u http://FUZZ.monitorsfour.htb/ -H "Host: FUZZ.monitorsfour.htb" -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -ac
+```
+- `-H` | switch specifies virtual host fuzzing
+
+{{< screenshots "shot-005" >}}
+
+---

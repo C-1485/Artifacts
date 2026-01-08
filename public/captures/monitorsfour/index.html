@@ -118,7 +118,7 @@ MonitorsFour | ARTIFACTS
             
             
                 <dt>reading time</dt>
-                <dd>1 minute</dd>
+                <dd>2 minutes</dd>
             
         </dl>
     </section>
@@ -141,9 +141,13 @@ Thus, the website was viewed in browser for further examination.</p>
   <img src="/captures/screens/MonitorsFour/shot-002.png" alt="shot-002">
 </p>
 <hr>
-<h4 id="003-virtual-hosts">003: Virtual Hosts</h4>
+<h4 id="003-victim-fuzz">003: Victim Fuzz</h4>
 <p>As the <code>nmap</code> report showed that the application was running on nginx, additional reconnaissance for the discovery of hidden files and subdomains was made using <code>ffuf</code>.
 <code>common.txt</code> wordlist exposed various paths, but what seemed most interesting was the <strong>Warning</strong> from <code>/contact</code> response.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ffuf -u http://monitorsfour.htb/FUZZ -w /usr/share/wordlists/seclists/Discovery/Web-Content/common.txt -ac
+</span></span></code></pre></div><ul>
+<li><code>-ac</code> | switch specifies auto-calibration, which filters out false positive responses</li>
+</ul>
 <p align="center">
   <img src="/captures/screens/MonitorsFour/shot-003.png" alt="shot-003">
 </p>
@@ -153,7 +157,22 @@ However, <code>/Router.php</code> when tested in <code>burpsuite</code> all resp
 <p align="center">
   <img src="/captures/screens/MonitorsFour/shot-004.png" alt="shot-004">
 </p>
-<p>Due to the absence of additional DNS records and the presence of generic content on the default host, virtual host enumeration was performed by fuzzing the Host header. This revealed an additional virtual host serving distinct content not accessible via standard DNS resolution.</p>
+<hr>
+<h4 id="004-virtual-host">004: Virtual Host</h4>
+<p><code>/Router.php</code> was assumed to be a front controller, since it is explicitly named <code>Router</code> and calls a prefix path <code>/var/www/app/</code>, which basically implied a centralized request handler to other website components.
+Hence, with <code>ffuf</code> the victim was probed for hidden subdomains.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ffuf -u http://FUZZ.monitorsfour.htb/ -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -ac
+</span></span></code></pre></div><p>Enumeration for DNS subdomains returned nothing.
+But, then the logical next step was probing for any virtual host.
+After few seconds virtual host <code>cacti</code> was found with a redirection status <code>302</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ffuf -u http://FUZZ.monitorsfour.htb/ -H <span style="color:#e6db74">&#34;Host: FUZZ.monitorsfour.htb&#34;</span> -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-5000.txt -ac
+</span></span></code></pre></div><ul>
+<li><code>-H</code> | switch specifies virtual host fuzzing</li>
+</ul>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-005.png" alt="shot-005">
+</p>
+<hr>
     </div>
 </div>
 
