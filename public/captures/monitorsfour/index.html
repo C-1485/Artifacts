@@ -118,7 +118,7 @@ MonitorsFour | ARTIFACTS
             
             
                 <dt>reading time</dt>
-                <dd>2 minutes</dd>
+                <dd>3 minutes</dd>
             
         </dl>
     </section>
@@ -157,6 +157,10 @@ However, <code>/Router.php</code> when tested in <code>burpsuite</code> all resp
 <p align="center">
   <img src="/captures/screens/MonitorsFour/shot-004.png" alt="shot-004">
 </p>
+<p>Additionally, <code>/user</code> returned an error message, stating that a token paramenter is missing.</p>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-006.png" alt="shot-006">
+</p>
 <hr>
 <h4 id="004-virtual-host">004: Virtual Host</h4>
 <p><code>/Router.php</code> was assumed to be a front controller, since it is explicitly named <code>Router</code> and calls a prefix path <code>/var/www/app/</code>, which basically implied a centralized request handler to other website components.
@@ -173,6 +177,47 @@ After few seconds virtual host <code>cacti</code> was found with a redirection s
   <img src="/captures/screens/MonitorsFour/shot-005.png" alt="shot-005">
 </p>
 <hr>
+<h4 id="005-idor">005: IDOR</h4>
+<p>At this point, from what was found in <code>/user</code> the victim was vulnerable to IDOR.
+As the error response suggested a missing parameter, <code>token=0</code> has been requested as a parameter in the URL and the target responded with sensitive credentials.</p>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-007.png" alt="shot-007">
+</p>
+<hr>
+<h4 id="006-md5-decryption">006: MD5 Decryption</h4>
+<p><code>admin</code> user was the target user worth the most for further examination.
+However, its password was encrypted with MD5.</p>
+<ul>
+<li><code>56b32eb43e6f15395f6c46c1c9e1cd36</code></li>
+</ul>
+<p>Hence, 
+<a href="https://iotools.cloud/tool/md5-decrypt/" target="_blank" rel="noopener">https://iotools.cloud/tool/md5-decrypt/</a>
+ successfully decrypted the found password resulting to a more sensible text.</p>
+<ul>
+<li><code>wonderful1</code></li>
+</ul>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-008.png" alt="shot-008">
+</p>
+<hr>
+<h4 id="007-cacti-login">007: Cacti Login</h4>
+<p>The username <code>admin</code> along with the decrypted password <code>wonderful1</code> were entered in the <code>cacti</code> log in page, but the credentials denied access.
+Regardless, since it was assumed that the cracked password was correct, the <code>name</code> of the <code>admin</code> user was entered as a username instead.
+Which successfully allowed access to the <code>cacti</code> dashboard.</p>
+<ul>
+<li><code>username: marcus</code></li>
+</ul>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-009.png" alt="shot-009">
+</p>
+<hr>
+<h4 id="008-reverse-shell">008: Reverse Shell</h4>
+<p>According to <code>https://www.cvedetails.com/vulnerability-list/vendor_id-7458/product_id-12584/version_id-1907377/year-2025/opec-1/Cacti-Cacti-1.2.28.html</code> the target is vulnerable to RCE, labeled as <code>CVE-2025-24367</code>.</p>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-010.png" alt="shot-010">
+</p>
+<p>A comprehensive POC against the vulnerability is found in <code>https://github.com/TheCyberGeek/CVE-2025-24367-Cacti-PoC</code>.
+The steps for the reverse shell process on the attacker machine were straight forward</p>
     </div>
 </div>
 

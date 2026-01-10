@@ -44,6 +44,10 @@ However, `/Router.php` when tested in `burpsuite` all responses returned `200 OK
 
 {{< screenshots "shot-004" >}}
 
+Additionally, `/user` returned an error message, stating that a token paramenter is missing.
+
+{{< screenshots "shot-006" >}}
+
 ---
 #### 004: Virtual Host
 
@@ -66,3 +70,41 @@ ffuf -u http://FUZZ.monitorsfour.htb/ -H "Host: FUZZ.monitorsfour.htb" -w /usr/s
 {{< screenshots "shot-005" >}}
 
 ---
+#### 005: IDOR
+
+At this point, from what was found in `/user` the victim was vulnerable to IDOR.
+As the error response suggested a missing parameter, `token=0` has been requested as a parameter in the URL and the target responded with sensitive credentials.
+
+{{< screenshots "shot-007" >}}
+
+---
+#### 006: MD5 Decryption
+
+`admin` user was the target user worth the most for further examination.
+However, its password was encrypted with MD5.
+- `56b32eb43e6f15395f6c46c1c9e1cd36`
+
+Hence, https://iotools.cloud/tool/md5-decrypt/ successfully decrypted the found password resulting to a more sensible text.
+- `wonderful1`
+
+{{< screenshots "shot-008" >}}
+
+---
+#### 007: Cacti Login
+
+The username `admin` along with the decrypted password `wonderful1` were entered in the `cacti` log in page, but the credentials denied access.
+Regardless, since it was assumed that the cracked password was correct, the `name` of the `admin` user was entered as a username instead.
+Which successfully allowed access to the `cacti` dashboard.
+- `username: marcus`
+
+{{< screenshots "shot-009" >}}
+
+---
+#### 008: Reverse Shell
+
+According to `https://www.cvedetails.com/vulnerability-list/vendor_id-7458/product_id-12584/version_id-1907377/year-2025/opec-1/Cacti-Cacti-1.2.28.html` the target is vulnerable to RCE, labeled as `CVE-2025-24367`.
+
+{{< screenshots "shot-010" >}}
+
+A comprehensive POC against the vulnerability is found in `https://github.com/TheCyberGeek/CVE-2025-24367-Cacti-PoC`.
+The steps for the reverse shell process on the attacker machine were straight forward
