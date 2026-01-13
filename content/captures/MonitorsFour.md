@@ -193,7 +193,12 @@ for i in $(seq 1 254); do (curl -s --connect-timeout 1 http://192.168.65.$i:2375
 - `executes scans in parallel and waits for all probes to finish`
 
 ---
-O_O
----
+#### 015: Root Flag
 
-- root: 35713cf72da6c0530e65ce8f42a16e26
+https://blog.qwertysecurity.com/Articles/blog3.html similar to our victim's case, described that any container on the current Docker version can have access to the API without proper authentication.
+The vulnerability is labeled as `CVE-2025-9074` and it was later patched with Docker Desktop 4.44.3.
+Nevertheless, a POC was found in https://github.com/3rendil/CVE-2025-9074-POC which the allowed the accessed container to mount the host filesystem.
+The script was downloaded in `/tmp` directory of the current container from our attacker local python server and then bacame executable with `chmod +x cve-2025-9074`.
+After successfull execution of the POC we had access to the created container with the mounter host filesystem.
+The `root.txt` was found with `cat /hostfs/mnt/host/c/Users/Administrator/Desktop/root.txt`.
+- `35713cf72da6c0530e65ce8f42a16e26`
