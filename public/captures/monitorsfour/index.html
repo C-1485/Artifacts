@@ -118,7 +118,7 @@ MonitorsFour | ARTIFACTS
             
             
                 <dt>reading time</dt>
-                <dd>5 minutes</dd>
+                <dd>6 minutes</dd>
             
         </dl>
     </section>
@@ -295,8 +295,19 @@ A simple Bash script has enabled a comprehensive subnet scan utilizing <code>cur
 <li><code>executes scans in parallel and waits for all probes to finish</code></li>
 </ul>
 <hr>
+<h4 id="015-root-flag">015: Root Flag</h4>
+<p>
+<a href="https://blog.qwertysecurity.com/Articles/blog3.html" target="_blank" rel="noopener">https://blog.qwertysecurity.com/Articles/blog3.html</a>
+ similar to our victim&rsquo;s case, described that any container on the current Docker version can have access to the API without proper authentication.
+The vulnerability is labeled as <code>CVE-2025-9074</code> and it was later patched with Docker Desktop 4.44.3.
+Nevertheless, a POC was found in 
+<a href="https://github.com/3rendil/CVE-2025-9074-POC" target="_blank" rel="noopener">https://github.com/3rendil/CVE-2025-9074-POC</a>
+ which the allowed the accessed container to mount the host filesystem.
+The script was downloaded in <code>/tmp</code> directory of the current container from our attacker local python server and then bacame executable with <code>chmod +x cve-2025-9074</code>.
+After successfull execution of the POC we had access to the created container with the mounter host filesystem.
+The <code>root.txt</code> was found with <code>cat /hostfs/mnt/host/c/Users/Administrator/Desktop/root.txt</code>.</p>
 <ul>
-<li>root: 35713cf72da6c0530e65ce8f42a16e26</li>
+<li><code>35713cf72da6c0530e65ce8f42a16e26</code></li>
 </ul>
     </div>
 </div>

@@ -3,7 +3,7 @@
 
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <title>
-captures | ARTIFACTS
+Browsed | ARTIFACTS
 </title>
 
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -13,9 +13,7 @@ captures | ARTIFACTS
 <meta name="generator" content="Hugo 0.152.2">
 
 
-<link rel="canonical" href="http://localhost:1313/captures/" >
-  <link href="http://localhost:1313/captures/index.xml" rel="alternate" type="application/rss+xml" title="artifacts" >
-  <link href="http://localhost:1313/captures/index.xml" rel="feed" type="application/rss+xml" title="artifacts" >
+<link rel="canonical" href="http://localhost:1313/captures/browsed/" >
 
 
 
@@ -66,71 +64,88 @@ captures | ARTIFACTS
         <div class="content">
             <main class="main">
                 
-
-<div>
-  <div class="listHeader">
-    <h1>captures</h1>
-  </div>
-
-  
-
-  
-  
-
-  <div role="list">
+<div class="postWrapper">
+    <h1>Browsed</h1>
     
-      <div class="postListItem" role="listitem">
-        <a class="postListLink" href="http://localhost:1313/captures/monitorsfour/">
-          <div class="postHeader">
-            <span class="postTitle">MonitorsFour</span>
-            
-            
-            <time class="postDate" datetime="0001-01-01">0001-01-01</time>
-          </div>
-          
-          
-          
-          
-          
-          <div class="readingTime">
-            reading time: 6 minutes
-          </div>
-          
-        </a>
-        <div class="postExcerpt">
-          <h4 id="write-up-for-the-hackthebox-machine---monitorsfour">Write-Up for the HackTheBox Machine - MonitorsFour</h4>
-        </div>
-      </div>
+
     
-      <div class="postListItem" role="listitem">
-        <a class="postListLink" href="http://localhost:1313/captures/twomillion/">
-          <div class="postHeader">
-            <span class="postTitle">TwoMillion</span>
-            
-            
-            <time class="postDate" datetime="0001-01-01">0001-01-01</time>
-          </div>
-          
-          
-          
-          
-          
-          <div class="readingTime">
-            reading time: 6 minutes
-          </div>
-          
-        </a>
-        <div class="postExcerpt">
-          <h4 id="write-up-for-the-hackthebox-machine---twomillion-in-guided-mode">Write-Up for the HackTheBox Machine - TwoMillion in Guided Mode</h4>
-        </div>
-      </div>
     
-  </div>
+    
+    
 
+    
+    
+    
+    
+    
 
+    
+    
+    
+    
+    
 
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    <section class="postMetadata">
+        <dl>
+            
+                <dt>tags</dt>
+<dd><span></span>HackTheBox Machines</dd>
+            
+            
+            
+            
+            
+            
+                <dt>reading time</dt>
+                <dd>1 minute</dd>
+            
+        </dl>
+    </section>
+    
+    <div>
+        <h4 id="write-up-for-the-hackthebox-machine---browsed">Write-Up for the HackTheBox Machine - Browsed</h4>
+<hr>
+<h4 id="001-port-scan">001: Port Scan</h4>
+<p>The provided victim IP <code>10.10.8.1</code> was scanned with <code>nmap</code>. Available port found are <code>port 22</code> and <code>port 80</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nmap -sC -sV -p- 10.10.8.1
+</span></span></code></pre></div><p align="center">
+  <img src="/captures/screens/Browsed/shot-001.png" alt="shot-001">
+</p>
+<hr>
+<h4 id="002-host-mapping">002: Host Mapping</h4>
+<p>To be able to browse the target an IP:Hostname mapping should be made in <code>/etc/hosts</code>.
+As commonly used by HackTheBox the target was named <code>&lt;victim_machine&gt;.htb</code> and its home page was viewed in browser.</p>
+<p align="center">
+  <img src="/captures/screens/Browsed/shot-002.png" alt="shot-002">
+</p>
+<p align="center">
+  <img src="/captures/screens/Browsed/shot-003.png" alt="shot-003">
+</p>
+<hr>
+<h4 id="003">003:</h4>
+    </div>
 </div>
-
 
             </main>
         </div>
