@@ -2,7 +2,7 @@
 title: "Eighteen"
 machine: Eighteen
 tags: HackTheBox Machines
-draft: false
+draft: true
 ---
 #### Write-Up for the HackTheBox Machine - Browsed
 <!--more-->
