@@ -8,37 +8,23 @@ showPublishedDate: false
 showReadingTime: false 
 ---
 
+<br>
+<div style="line-height: 2;">
+<h3>
+This website aims to provide an insight about the procedures and actions taken, which contribute in a personal growth towards experiencing the natural progression of a journey.
+<br>
+With experimentation and exploration in domains of technology a simple objective was set in mind, to test alternate thinking perspectives.
+<br>
+The shared content is related to concise documentation of projects and practices that align with one's own interests.
+<br>
+Nevertheless, mistakes are intended to happen and they would greatly signify a checkpoint for a future reflection.
+</h3>
+</div>
+
+---
+
 <div style="text-align: center;">
-
-<br>
-
-<h2>
-<i>
-<u>
-“With mistakes we learn, and with learning we conquer.”
-</u>
-</i>
-</h2>
-
-<br>
-
 <h4>
-Welcome to the grand archive where brave knights and cunning rogues chronicle their exploits in the dark and treacherous lands of Capture The Flag (CTF) dungeons.  
-
-Herein lie scrolls of vanquished vulnerable machines, cunning traps discovered, and secrets plundered from afar. Tread carefully, for every procedure is a relic of past quests—study them well, lest ye awaken the dreaded Segmentation Fault Dragon! 🐉  
-
-<br>
-<i>
-“May thy wits stay sharp and thy exploits legendary.”
-</i>  
-</br>
-<br>
-<hr>
-
+~ Take Your Time ~
 </h4>
-
-<i>
-Documented by the humble scribes of ARTIFACTS.
-</i>
-
 </div>
