@@ -126,14 +126,14 @@ Eighteen | ARTIFACTS
     <div>
         <h4 id="write-up-for-the-hackthebox-machine---browsed">Write-Up for the HackTheBox Machine - Browsed</h4>
 <hr>
-<h4 id="001-port-enumeration">001: Port Enumeration</h4>
-<p>Initially a <code>nmap</code> scan was performed against the victim to identify potential attack surfaces.</p>
+<h4 id="001-port-scan">001: Port Scan</h4>
+<p>Initially a scan was performed against the victim to identify potential attack surfaces.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nmap -sC -sV -p- &lt;victim_ip&gt;
-</span></span></code></pre></div><p>Based on the used command the <code>nmap</code> report provided three open ports that could be used against the target.</p>
+</span></span></code></pre></div><p>Based on the used command the scanner&rsquo;s report provided three open ports that could be used against the target.</p>
 <ul>
-<li><code>80 - Microsoft IIS</code></li>
-<li><code>1433 - Microsoft SQL Server 2022</code></li>
-<li><code>5985 - Microsoft HTTPAPI (WinRM)</code></li>
+<li><code>80 : Microsoft IIS</code></li>
+<li><code>1433 : Microsoft SQL Server 2022</code></li>
+<li><code>5985 : Microsoft HTTPAPI (WinRM)</code></li>
 </ul>
 <p align="center">
   <img src="/captures/screens/Eighteen/shot-001.png" alt="shot-001">
@@ -141,8 +141,19 @@ Eighteen | ARTIFACTS
 <hr>
 <h4 id="002-hostname-mapping">002: Hostname Mapping</h4>
 <p>A DNS does not resolve the victim&rsquo;s IP, thus a mapping must be added in <code>/etc/hosts</code> to be able to browse the hostname <code>eighteen.htb</code> as found from the <code>nmap</code> scan.</p>
-<h4 id="003">003:</h4>
-<h4 id="004">004:</h4>
+<hr>
+<h4 id="003-port-80-enumeration">003: Port 80 Enumeration</h4>
+<p>User sessions expired after a short period of inactivity, redirecting to the <code>/login</code> page.
+Previously registered credentials could not be reused, indicating non-persistent or session-bound user storage rather than a proper backend account system.
+Regardless after many attempts to login with the previously registered credentials an error exposed a Microsoft SQL Server message related to duplicate key violation.</p>
+<ul>
+<li><code>dbo.users : The duplicate key value is (c@c.com). (2627)</code></li>
+</ul>
+<p align="center">
+  <img src="/captures/screens/Eighteen/shot-002.png" alt="shot-002">
+</p>
+<hr>
+<h4 id="004-port-1433-enumeration">004: Port 1433 Enumeration</h4>
     </div>
 </div>
 
