@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <title>
+Eighteen | ARTIFACTS
+</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+
+<meta name="generator" content="Hugo 0.152.2">
+
+
+<link rel="canonical" href="http://localhost:1313/captures/eighteen/" >
+
+
+
+
+<link href="/css/style.min.5f46e10d3d75c0ba6553d0749280b20ce50648a191585d2b90bfa5a77f1653cd.css" rel="stylesheet">
+
+
+
+
+</head>
+
+<body>
+
+    <div class="flexWrapper">
+        <header class="headerWrapper">
+    <div class="header">
+        <div>
+            <a class="terminal" href="/">
+                <span>C-1485@artifacts.io ~ $</span>
+            </a>
+        </div>
+        <input class="side-menu" type="checkbox" id="side-menu">
+        <label class="hamb" for="side-menu"><span class="hamb-line"></span></label>
+        <nav class="headerLinks">
+            <ul>
+                
+                <li>
+                    <a href="http://localhost:1313/posts" title="" >
+                        ~/posts</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:1313/captures" title="" >
+                        ~/captures</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:1313/about" title="" >
+                        ~/about</a>
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="content">
+            <main class="main">
+                
+<div class="postWrapper">
+    <h1>Eighteen</h1>
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    <section class="postMetadata">
+        <dl>
+            
+                <dt>tags</dt>
+<dd><span></span>HackTheBox Machines</dd>
+            
+            
+            
+            
+            
+            
+                <dt>reading time</dt>
+                <dd>1 minute</dd>
+            
+        </dl>
+    </section>
+    
+    <div>
+        <h4 id="write-up-for-the-hackthebox-machine---browsed">Write-Up for the HackTheBox Machine - Browsed</h4>
+<hr>
+<h4 id="001-port-enumeration">001: Port Enumeration</h4>
+<p>Initially a <code>nmap</code> scan was performed against the victim to identify potential attack surfaces.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nmap -sC -sV -p- &lt;victim_ip&gt;
+</span></span></code></pre></div><p>Based on the used command the <code>nmap</code> report provided three open ports that could be used against the target.</p>
+<ul>
+<li><code>80 - Microsoft IIS</code></li>
+<li><code>1433 - Microsoft SQL Server 2022</code></li>
+<li><code>5985 - Microsoft HTTPAPI (WinRM)</code></li>
+</ul>
+<p align="center">
+  <img src="/captures/screens/Eighteen/shot-001.png" alt="shot-001">
+</p>
+<hr>
+<h4 id="002-hostname-mapping">002: Hostname Mapping</h4>
+<p>A DNS does not resolve the victim&rsquo;s IP, thus a mapping must be added in <code>/etc/hosts</code> to be able to browse the hostname <code>eighteen.htb</code> as found from the <code>nmap</code> scan.</p>
+<h4 id="003">003:</h4>
+<h4 id="004">004:</h4>
+    </div>
+</div>
+
+            </main>
+        </div>
+
+
+        <footer class="footer">
+    
+        <span>
+            ♣ ♦ ♠ ♥ 
+        </span>
+    
+</footer>
+    </div>
+
+</body>
+
+</html>

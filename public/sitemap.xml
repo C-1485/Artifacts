@@ -21,6 +21,8 @@
   </url><url>
     <loc>http://localhost:1313/components/</loc>
   </url><url>
+    <loc>http://localhost:1313/captures/eighteen/</loc>
+  </url><url>
     <loc>http://localhost:1313/tags/hackthebox-machines/</loc>
   </url><url>
     <loc>http://localhost:1313/captures/monitorsfour/</loc>
