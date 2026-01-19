@@ -39,4 +39,20 @@ Regardless after many attempts to login with the previously registered credentia
 ---
 #### 004: Port 1433 Enumeration
 
+Given that Microsoft SQL Server 2022 is open and the credentials `kevin:iNa2we6haRj2gaw!`, a Python script was utilized for server connectivity.
 
+```bash
+find / -name mssqlclient.py 2>/dev/null
+```
+```bash
+python3 mssqlclient.py 'kevin:iNa2we6haRj2gaw!@<victim_ip>'
+```
+
+{{< screenshots "shot-003" >}}
+
+A handful of databases are available on the victim, however out of all the one that seems most interesting is `financial_planner`
+
+{{< screenshots "shot-004" >}}
+
+
+---
