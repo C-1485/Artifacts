@@ -50,9 +50,20 @@ python3 mssqlclient.py 'kevin:iNa2we6haRj2gaw!@<victim_ip>'
 
 {{< screenshots "shot-003" >}}
 
-A handful of databases are available on the victim, however out of all the one that seems most interesting is `financial_planner`
+A handful of databases are available on the victim, however out of all the one that seems most interesting is `financial_planner`.
+Although as the current user `kevin` permission to use the database is not sufficient.
+
+```bash
+select name from sys.databases;
+```
+```bash
+use financial_planner;
+```
 
 {{< screenshots "shot-004" >}}
+
+As a subsequent step a user was leveraged via SQL impersonation, effectively once switched to allowed privileged execution of queries on the server.
+
 
 
 ---

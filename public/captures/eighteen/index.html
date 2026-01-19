@@ -160,10 +160,14 @@ Regardless after many attempts to login with the previously registered credentia
 </span></span></code></pre></div><p align="center">
   <img src="/captures/screens/Eighteen/shot-003.png" alt="shot-003">
 </p>
-<p>A handful of databases are available on the victim, however out of all the one that seems most interesting is <code>financial_planner</code></p>
-<p align="center">
+<p>A handful of databases are available on the victim, however out of all the one that seems most interesting is <code>financial_planner</code>.
+Although as the current user <code>kevin</code> permission to use the database is not sufficient.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> name from sys.databases;
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>use financial_planner;
+</span></span></code></pre></div><p align="center">
   <img src="/captures/screens/Eighteen/shot-004.png" alt="shot-004">
 </p>
+<p>As a subsequent step a user was leveraged via SQL impersonation, effectively once switched to allowed privileged execution of queries on the server.</p>
 <hr>
     </div>
 </div>
