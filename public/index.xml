@@ -16,13 +16,6 @@
       <description>&lt;br&gt;&#xA;&lt;div style=&#34;line-height: 2;&#34;&gt;&#xA;&lt;h3&gt;&#xA;This website aims to provide an insight about the procedures and actions taken, which contribute in a personal growth towards experiencing the natural progression of a journey.&#xA;&lt;br&gt;&#xA;With experimentation and exploration in domains of technology a simple objective was set in mind, to understand patterns and relationships.&#xA;&lt;br&gt;&#xA;The shared content is related to concise documentation of projects and practices that align with one&#39;s own interests.&#xA;&lt;br&gt;&#xA;Nevertheless, mistakes are intended to happen and they would greatly signify a checkpoint for a future reflection.&#xA;&lt;/h3&gt;&#xA;&lt;/div&gt;&#xA;&lt;hr&gt;&#xA;&lt;div style=&#34;text-align: center;&#34;&gt;&#xA;&lt;h4&gt;&#xA;~ Take Your Time ~&#xA;&lt;/h4&gt;&#xA;&lt;/div&gt;</description>
     </item>
     <item>
-      <title>Dummy</title>
-      <link>http://localhost:1313/posts/dummy/</link>
-      <pubDate>Sat, 01 Nov 2025 02:42:28 +0200</pubDate>
-      <guid>http://localhost:1313/posts/dummy/</guid>
-      <description>&lt;h1 id=&#34;dummy-post&#34;&gt;dummy post&lt;/h1&gt;&#xA;&lt;p&gt;dummy content&lt;/p&gt;</description>
-    </item>
-    <item>
       <title>Eighteen</title>
       <link>http://localhost:1313/captures/eighteen/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -38,9 +31,9 @@
     </item>
     <item>
       <title>SDLBITS</title>
-      <link>http://localhost:1313/posts/sdlbits/</link>
+      <link>http://localhost:1313/projects/sdlbits/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/sdlbits/</guid>
+      <guid>http://localhost:1313/projects/sdlbits/</guid>
       <description>&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Objective:todo&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Architectural Diagram:todo&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;System Flow:todo&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
     <item>

@@ -41,13 +41,18 @@ Eighteen | ARTIFACTS
             <ul>
                 
                 <li>
-                    <a href="http://localhost:1313/posts" title="" >
-                        ~/posts</a>
+                    <a href="http://localhost:1313/projects" title="" >
+                        ~/projects</a>
                 </li>
                 
                 <li>
                     <a href="http://localhost:1313/captures" title="" >
                         ~/captures</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:1313/playbooks" title="" >
+                        ~/playbooks</a>
                 </li>
                 
                 <li>
@@ -129,7 +134,7 @@ Eighteen | ARTIFACTS
 <h4 id="001-port-scan">001: Port Scan</h4>
 <p>Initially a scan was performed against the victim to identify potential attack surfaces.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nmap -sC -sV -p- &lt;victim_ip&gt;
-</span></span></code></pre></div><p>Based on the used command the scanner&rsquo;s report provided three open ports that could be used against the target.</p>
+</span></span></code></pre></div><p>Based on the used command the scanner&rsquo;s report provides three open ports that could be used against the target.</p>
 <ul>
 <li><code>80 : Microsoft IIS</code></li>
 <li><code>1433 : Microsoft SQL Server 2022</code></li>
@@ -143,9 +148,9 @@ Eighteen | ARTIFACTS
 <p>A DNS does not resolve the victim&rsquo;s IP, thus a mapping must be added in <code>/etc/hosts</code> to be able to browse the hostname <code>eighteen.htb</code> as found from the <code>nmap</code> scan.</p>
 <hr>
 <h4 id="003-port-80-enumeration">003: Port 80 Enumeration</h4>
-<p>User sessions expired after a short period of inactivity, redirecting to the <code>/login</code> page.
-Previously registered credentials could not be reused, indicating non-persistent or session-bound user storage rather than a proper backend account system.
-Regardless after many attempts to login with the previously registered credentials an error exposed a Microsoft SQL Server message related to duplicate key violation.</p>
+<p>User sessions expire after a short period of inactivity, redirecting to the <code>/login</code> page.
+Previously registered credentials can not be reused, indicating non-persistent or session-bound user storage rather than a proper backend account system.
+Regardless after many attempts to log in with the previously registered credentials an error exposes a Microsoft SQL Server message related to duplicate key violation.</p>
 <ul>
 <li><code>dbo.users : The duplicate key value is (c@c.com). (2627)</code></li>
 </ul>
@@ -154,7 +159,7 @@ Regardless after many attempts to login with the previously registered credentia
 </p>
 <hr>
 <h4 id="004-port-1433-enumeration">004: Port 1433 Enumeration</h4>
-<p>Given that Microsoft SQL Server 2022 is open and the credentials <code>kevin:iNa2we6haRj2gaw!</code>, a Python script was utilized for server connectivity.</p>
+<p>Given that Microsoft SQL Server 2022 is open and the credentials <code>kevin:iNa2we6haRj2gaw!</code>, a Python script is utilized for server connectivity.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find / -name mssqlclient.py 2&gt;/dev/null
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3 mssqlclient.py <span style="color:#e6db74">&#39;kevin:iNa2we6haRj2gaw!@&lt;victim_ip&gt;&#39;</span>
 </span></span></code></pre></div><p align="center">
@@ -167,7 +172,11 @@ Although as the current user <code>kevin</code> permission to use the database i
 </span></span></code></pre></div><p align="center">
   <img src="/captures/screens/Eighteen/shot-004.png" alt="shot-004">
 </p>
-<p>As a subsequent step a user was leveraged via SQL impersonation, effectively once switched to allowed privileged execution of queries on the server.</p>
+<p>As a subsequent step the SQL server is examined for potential users that can be leveraged.
+There are three noticeable users, but only one can be impersonated and effectively execute privileged queries on the target SQL server.</p>
+<ul>
+<li><code>appdev</code></li>
+</ul>
 <hr>
     </div>
 </div>

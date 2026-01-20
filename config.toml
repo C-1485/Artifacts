@@ -21,13 +21,17 @@ pagerSize = 3
     weight = 0
     url = '/about'
   [[menu.header]]
-    name = 'posts'
+    name = 'projects'
     weight = 1
-    url = '/posts'
+    url = '/projects'
   [[menu.header]]
     name = 'captures'
     weight = 2
     url = '/captures'
+  [[menu.header]]
+    name = 'playbooks'
+    weight = 3
+    url = '/playbooks'
 
 [taxonomies]
 tags = "tags"
