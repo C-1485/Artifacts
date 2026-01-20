@@ -9,7 +9,6 @@ tags: HackTheBox Machines
 #### 001: Port Scan
 
 Initially a scan was performed against the victim to identify potential attack surfaces.
-
 ```bash
 nmap -sC -sV -p- <victim_ip>
 ```
@@ -29,9 +28,7 @@ A DNS does not resolve the victim's IP, thus a mapping must be added in `/etc/ho
 ---
 #### 003: Port 80 Enumeration
 
-User sessions expire after a short period of inactivity, redirecting to the `/login` page. 
-Previously registered credentials can not be reused, indicating non-persistent or session-bound user storage rather than a proper backend account system.
-Regardless after many attempts to log in with the previously registered credentials an error exposes a Microsoft SQL Server message related to duplicate key violation.
+User sessions expire after a short period of inactivity, redirecting to the `/login` page. Previously registered credentials can not be reused, indicating non-persistent or session-bound user storage rather than a proper backend account system. Regardless after many attempts to log in with the previously registered credentials an error exposes a Microsoft SQL Server message related to duplicate key violation.
 - `dbo.users : The duplicate key value is (c@c.com). (2627)`
 
 {{< screenshots "shot-002" >}}
@@ -40,7 +37,6 @@ Regardless after many attempts to log in with the previously registered credenti
 #### 004: Port 1433 Enumeration
 
 Given that Microsoft SQL Server 2022 is open and the credentials `kevin:iNa2we6haRj2gaw!`, a Python script is utilized for server connectivity.
-
 ```bash
 find / -name mssqlclient.py 2>/dev/null
 ```
@@ -50,11 +46,9 @@ python3 mssqlclient.py 'kevin:iNa2we6haRj2gaw!@<victim_ip>'
 
 {{< screenshots "shot-003" >}}
 
-A handful of databases are available on the victim, however out of all the one that seems most interesting is `financial_planner`.
-Although as the current user `kevin` permission to use the database is not sufficient.
-
-```bash
-select name from sys.databases;
+A handful of databases are available on the victim, however out of all the one that seems most interesting is `financial_planner`. Although as the current user `kevin` permission to use the database is not sufficient.
+```sql
+SELECT name FROM sys.databases;
 ```
 ```bash
 use financial_planner;
@@ -62,10 +56,25 @@ use financial_planner;
 
 {{< screenshots "shot-004" >}}
 
-As a subsequent step the SQL server is examined for potential users that can be leveraged.
-There are three noticeable users, but only one can be impersonated and effectively execute privileged queries on the target SQL server.
+As a subsequent step the SQL server is examined for potential users that can be leveraged. There are three noticeable users, but only one can be impersonated and effectively execute privileged queries on the target SQL server.
 - `appdev`
+```sql
+SELECT loginname FROM syslogins;
+```
+```bash
+enum_impersonate
+```
 
+The precedent inaccessible database becomes available when switching to the impersonated user. In `users` table within the `financial_planner` database a single entry is found with a hashed password.
+- `pbkdf2:sha256:600000$AMtzteQIG7yAbZIa$0673ad90a0b4afb19d662336f0fce3a9edd0b7b19193717be28ce4d66c887133`
+```sql
+SELECT name FROM sys.tables;
+```
+```sql
+SELECT * FROM users;
+```
+
+{{< screenshots "shot-005" >}}
 
 
 ---

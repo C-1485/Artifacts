@@ -148,9 +148,7 @@ Eighteen | ARTIFACTS
 <p>A DNS does not resolve the victim&rsquo;s IP, thus a mapping must be added in <code>/etc/hosts</code> to be able to browse the hostname <code>eighteen.htb</code> as found from the <code>nmap</code> scan.</p>
 <hr>
 <h4 id="003-port-80-enumeration">003: Port 80 Enumeration</h4>
-<p>User sessions expire after a short period of inactivity, redirecting to the <code>/login</code> page.
-Previously registered credentials can not be reused, indicating non-persistent or session-bound user storage rather than a proper backend account system.
-Regardless after many attempts to log in with the previously registered credentials an error exposes a Microsoft SQL Server message related to duplicate key violation.</p>
+<p>User sessions expire after a short period of inactivity, redirecting to the <code>/login</code> page. Previously registered credentials can not be reused, indicating non-persistent or session-bound user storage rather than a proper backend account system. Regardless after many attempts to log in with the previously registered credentials an error exposes a Microsoft SQL Server message related to duplicate key violation.</p>
 <ul>
 <li><code>dbo.users : The duplicate key value is (c@c.com). (2627)</code></li>
 </ul>
@@ -165,18 +163,27 @@ Regardless after many attempts to log in with the previously registered credenti
 </span></span></code></pre></div><p align="center">
   <img src="/captures/screens/Eighteen/shot-003.png" alt="shot-003">
 </p>
-<p>A handful of databases are available on the victim, however out of all the one that seems most interesting is <code>financial_planner</code>.
-Although as the current user <code>kevin</code> permission to use the database is not sufficient.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> name from sys.databases;
+<p>A handful of databases are available on the victim, however out of all the one that seems most interesting is <code>financial_planner</code>. Although as the current user <code>kevin</code> permission to use the database is not sufficient.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> name <span style="color:#66d9ef">FROM</span> sys.databases;
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>use financial_planner;
 </span></span></code></pre></div><p align="center">
   <img src="/captures/screens/Eighteen/shot-004.png" alt="shot-004">
 </p>
-<p>As a subsequent step the SQL server is examined for potential users that can be leveraged.
-There are three noticeable users, but only one can be impersonated and effectively execute privileged queries on the target SQL server.</p>
+<p>As a subsequent step the SQL server is examined for potential users that can be leveraged. There are three noticeable users, but only one can be impersonated and effectively execute privileged queries on the target SQL server.</p>
 <ul>
 <li><code>appdev</code></li>
 </ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> loginname <span style="color:#66d9ef">FROM</span> syslogins;
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>enum_impersonate
+</span></span></code></pre></div><p>The precedent inaccessible database becomes available when switching to the impersonated user. In <code>users</code> table within the <code>financial_planner</code> database a single entry is found with a hashed password.</p>
+<ul>
+<li><code>pbkdf2:sha256:600000$AMtzteQIG7yAbZIa$0673ad90a0b4afb19d662336f0fce3a9edd0b7b19193717be28ce4d66c887133</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> name <span style="color:#66d9ef">FROM</span> sys.tables;
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> users;
+</span></span></code></pre></div><p align="center">
+  <img src="/captures/screens/Eighteen/shot-005.png" alt="shot-005">
+</p>
 <hr>
     </div>
 </div>
