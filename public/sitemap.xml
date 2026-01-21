@@ -32,6 +32,8 @@
   </url><url>
     <loc>http://localhost:1313/captures/monitorsfour/</loc>
   </url><url>
+    <loc>http://localhost:1313/playbooks/report_basis/</loc>
+  </url><url>
     <loc>http://localhost:1313/projects/sdlbits/</loc>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
