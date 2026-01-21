@@ -13,7 +13,7 @@ Initially a scan was performed against the victim to identify potential attack s
 nmap -sC -sV -p- <victim_ip>
 ```
 
-Based on the used command the scanner's report provides three open ports that could be used against the target.
+Based on the used command the scanner's report provided three open ports that could be used against the target.
 - `80 : Microsoft IIS`
 - `1433 : Microsoft SQL Server 2022`
 - `5985 : Microsoft HTTPAPI (WinRM)`
@@ -28,7 +28,7 @@ A DNS does not resolve the victim's IP, thus a mapping must be added in `/etc/ho
 ---
 #### 003: Port 80 Enumeration
 
-User sessions expire after a short period of inactivity, redirecting to the `/login` page. Previously registered credentials can not be reused, indicating non-persistent or session-bound user storage rather than a proper backend account system. Regardless after many attempts to log in with the previously registered credentials an error exposes a Microsoft SQL Server message related to duplicate key violation.
+User sessions expire after a short period of inactivity, redirecting to the `/login` page. Previously registered credentials can not be reused, indicating non-persistent user storage rather than a proper backend account system. Regardless after many attempts to log in with the previously registered credentials an error exposes a Microsoft SQL Server message related to duplicate key violation.
 - `dbo.users : The duplicate key value is (c@c.com). (2627)`
 
 {{< screenshots "shot-002" >}}
@@ -36,7 +36,7 @@ User sessions expire after a short period of inactivity, redirecting to the `/lo
 ---
 #### 004: Port 1433 Enumeration
 
-Given that Microsoft SQL Server 2022 is open and the credentials `kevin:iNa2we6haRj2gaw!`, a Python script is utilized for server connectivity.
+Given that Microsoft SQL Server 2022 is open and the credentials `kevin:iNa2we6haRj2gaw!`, a Python script was utilized for server connectivity.
 ```bash
 find / -name mssqlclient.py 2>/dev/null
 ```
@@ -46,7 +46,7 @@ python3 mssqlclient.py 'kevin:iNa2we6haRj2gaw!@<victim_ip>'
 
 {{< screenshots "shot-003" >}}
 
-A handful of databases are available on the victim, however out of all the one that seems most interesting is `financial_planner`. Although as the current user `kevin` permission to use the database is not sufficient.
+A handful of databases are available on the victim, however out of all the one that seemed most interesting is `financial_planner`. Although as the current user `kevin` permission to use the database is not sufficient.
 ```sql
 SELECT name FROM sys.databases;
 ```
@@ -76,5 +76,15 @@ SELECT * FROM users;
 
 {{< screenshots "shot-005" >}}
 
-
 ---
+#### 005: Hash Crack
+
+The hashing function PBKDF2 is designed to be irreversible and computationally expensive. Nonetheless a GitHub repository [Werkzeug-PBKDF2-Hash-Converter](https://github.com/qui113x/Werkzeug-PBKDF2-Hash-Converter) provides a concise convertion process, compatible for Hashcat. The execution of the script converted the salt and hex values to a Base64 encoding.
+```bash
+git clone https://github.com/qui113x/Werkzeug-PBKDF2-Hash-Converter
+```
+```bash
+python3 pbkdf2-hashconv.py
+```
+
+{{< screenshots "shot-006" >}}

@@ -134,7 +134,7 @@ Eighteen | ARTIFACTS
 <h4 id="001-port-scan">001: Port Scan</h4>
 <p>Initially a scan was performed against the victim to identify potential attack surfaces.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nmap -sC -sV -p- &lt;victim_ip&gt;
-</span></span></code></pre></div><p>Based on the used command the scanner&rsquo;s report provides three open ports that could be used against the target.</p>
+</span></span></code></pre></div><p>Based on the used command the scanner&rsquo;s report provided three open ports that could be used against the target.</p>
 <ul>
 <li><code>80 : Microsoft IIS</code></li>
 <li><code>1433 : Microsoft SQL Server 2022</code></li>
@@ -148,7 +148,7 @@ Eighteen | ARTIFACTS
 <p>A DNS does not resolve the victim&rsquo;s IP, thus a mapping must be added in <code>/etc/hosts</code> to be able to browse the hostname <code>eighteen.htb</code> as found from the <code>nmap</code> scan.</p>
 <hr>
 <h4 id="003-port-80-enumeration">003: Port 80 Enumeration</h4>
-<p>User sessions expire after a short period of inactivity, redirecting to the <code>/login</code> page. Previously registered credentials can not be reused, indicating non-persistent or session-bound user storage rather than a proper backend account system. Regardless after many attempts to log in with the previously registered credentials an error exposes a Microsoft SQL Server message related to duplicate key violation.</p>
+<p>User sessions expire after a short period of inactivity, redirecting to the <code>/login</code> page. Previously registered credentials can not be reused, indicating non-persistent user storage rather than a proper backend account system. Regardless after many attempts to log in with the previously registered credentials an error exposes a Microsoft SQL Server message related to duplicate key violation.</p>
 <ul>
 <li><code>dbo.users : The duplicate key value is (c@c.com). (2627)</code></li>
 </ul>
@@ -157,13 +157,13 @@ Eighteen | ARTIFACTS
 </p>
 <hr>
 <h4 id="004-port-1433-enumeration">004: Port 1433 Enumeration</h4>
-<p>Given that Microsoft SQL Server 2022 is open and the credentials <code>kevin:iNa2we6haRj2gaw!</code>, a Python script is utilized for server connectivity.</p>
+<p>Given that Microsoft SQL Server 2022 is open and the credentials <code>kevin:iNa2we6haRj2gaw!</code>, a Python script was utilized for server connectivity.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find / -name mssqlclient.py 2&gt;/dev/null
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3 mssqlclient.py <span style="color:#e6db74">&#39;kevin:iNa2we6haRj2gaw!@&lt;victim_ip&gt;&#39;</span>
 </span></span></code></pre></div><p align="center">
   <img src="/captures/screens/Eighteen/shot-003.png" alt="shot-003">
 </p>
-<p>A handful of databases are available on the victim, however out of all the one that seems most interesting is <code>financial_planner</code>. Although as the current user <code>kevin</code> permission to use the database is not sufficient.</p>
+<p>A handful of databases are available on the victim, however out of all the one that seemed most interesting is <code>financial_planner</code>. Although as the current user <code>kevin</code> permission to use the database is not sufficient.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> name <span style="color:#66d9ef">FROM</span> sys.databases;
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>use financial_planner;
 </span></span></code></pre></div><p align="center">
@@ -185,6 +185,15 @@ Eighteen | ARTIFACTS
   <img src="/captures/screens/Eighteen/shot-005.png" alt="shot-005">
 </p>
 <hr>
+<h4 id="005-hash-crack">005: Hash Crack</h4>
+<p>The hashing function PBKDF2 is designed to be irreversible and computationally expensive. Nonetheless a GitHub repository 
+<a href="https://github.com/qui113x/Werkzeug-PBKDF2-Hash-Converter" target="_blank" rel="noopener">Werkzeug-PBKDF2-Hash-Converter</a>
+ provides a concise convertion process, compatible for Hashcat. The execution of the script converted the salt and hex values to a Base64 encoding.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/qui113x/Werkzeug-PBKDF2-Hash-Converter
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3 pbkdf2-hashconv.py
+</span></span></code></pre></div><p align="center">
+  <img src="/captures/screens/Eighteen/shot-006.png" alt="shot-006">
+</p>
     </div>
 </div>
 
