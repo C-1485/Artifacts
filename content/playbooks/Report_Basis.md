@@ -6,20 +6,25 @@ draft: false
 <!--more-->
 ---
 #### 001: Past Tense
-- actions taken
-- findings
-- observations
-- adversary procedures
+- Actions taken
+- Findings
+- Observations
+- Adversary procedures
 
 ---
 #### 002: Present Tense
-- system properties
-- vulnerabilities
-- risks
-- impact
+- System properties
+- Vulnerabilities
+- Risks
+- Impact
 
 ---
-#### 003: Structure
+#### 003: Structure (for each section)
+1. Approach description
+2. Findings (if any)
+3. Commands (if any)
+4. Screenshot
+
 - Subtitles | Present
 - Descriptions | Present
 - Evidence | Past

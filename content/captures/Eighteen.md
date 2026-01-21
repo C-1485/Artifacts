@@ -79,7 +79,8 @@ SELECT * FROM users;
 ---
 #### 005: Hash Crack
 
-The hashing function PBKDF2 is designed to be irreversible and computationally expensive. Nonetheless a GitHub repository [Werkzeug-PBKDF2-Hash-Converter](https://github.com/qui113x/Werkzeug-PBKDF2-Hash-Converter) provides a concise convertion process, compatible for Hashcat. The execution of the script converted the salt and hex values to a Base64 encoding.
+The hashing function PBKDF2-HMAC-SHA256 is designed to be irreversible and computationally expensive. Nonetheless, a GitHub repository [Werkzeug-PBKDF2-Hash-Converter](https://github.com/qui113x/Werkzeug-PBKDF2-Hash-Converter) provides a concise conversion process, compatible for Hashcat. The execution of the script converted the salt and hex values to a Base64 encoding.
+- `sha256:600000:QU10enRlUUlHN3lBYlpJYQ==:BnOtkKC0r7GdZiM28Pzjqe3Qt7GRk3F74ozk1myIcTM=`
 ```bash
 git clone https://github.com/qui113x/Werkzeug-PBKDF2-Hash-Converter
 ```
@@ -88,3 +89,13 @@ python3 pbkdf2-hashconv.py
 ```
 
 {{< screenshots "shot-006" >}}
+
+According to the description of the found repository, the converted value was added in text file named `hash.txt`. Hashcat has successfully recovered a password with the use of the `rockyou.txt` wordlist and a set mode for PBKDF2-HMAC-SHA256.
+- `sha256:600000:QU10enRlUUlHN3lBYlpJYQ==:BnOtkKC0r7GdZiM28Pzjqe3Qt7GRk3F74ozk1myIcTM=:iloveyou1`
+```bash
+hashcat -m 10900 hash.txt /usr/share/wordlists/rockyou.txt
+```
+
+{{< screenshots "shot-006" >}}
+
+---

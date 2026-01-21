@@ -186,14 +186,26 @@ Eighteen | ARTIFACTS
 </p>
 <hr>
 <h4 id="005-hash-crack">005: Hash Crack</h4>
-<p>The hashing function PBKDF2 is designed to be irreversible and computationally expensive. Nonetheless a GitHub repository 
+<p>The hashing function PBKDF2-HMAC-SHA256 is designed to be irreversible and computationally expensive. Nonetheless, a GitHub repository 
 <a href="https://github.com/qui113x/Werkzeug-PBKDF2-Hash-Converter" target="_blank" rel="noopener">Werkzeug-PBKDF2-Hash-Converter</a>
- provides a concise convertion process, compatible for Hashcat. The execution of the script converted the salt and hex values to a Base64 encoding.</p>
+ provides a concise conversion process, compatible for Hashcat. The execution of the script converted the salt and hex values to a Base64 encoding.</p>
+<ul>
+<li><code>sha256:600000:QU10enRlUUlHN3lBYlpJYQ==:BnOtkKC0r7GdZiM28Pzjqe3Qt7GRk3F74ozk1myIcTM=</code></li>
+</ul>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/qui113x/Werkzeug-PBKDF2-Hash-Converter
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python3 pbkdf2-hashconv.py
 </span></span></code></pre></div><p align="center">
   <img src="/captures/screens/Eighteen/shot-006.png" alt="shot-006">
 </p>
+<p>According to the description of the found repository, the converted value was added in text file named <code>hash.txt</code>. Hashcat has successfully recovered a password with the use of the <code>rockyou.txt</code> wordlist and a set mode for PBKDF2-HMAC-SHA256.</p>
+<ul>
+<li><code>sha256:600000:QU10enRlUUlHN3lBYlpJYQ==:BnOtkKC0r7GdZiM28Pzjqe3Qt7GRk3F74ozk1myIcTM=:iloveyou1</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hashcat -m <span style="color:#ae81ff">10900</span> hash.txt /usr/share/wordlists/rockyou.txt
+</span></span></code></pre></div><p align="center">
+  <img src="/captures/screens/Eighteen/shot-006.png" alt="shot-006">
+</p>
+<hr>
     </div>
 </div>
 
