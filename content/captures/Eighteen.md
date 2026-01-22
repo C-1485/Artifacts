@@ -99,3 +99,4 @@ hashcat -m 10900 hash.txt /usr/share/wordlists/rockyou.txt
 {{< screenshots "shot-006" >}}
 
 ---
+#### 006
