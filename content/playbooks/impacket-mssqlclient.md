@@ -64,7 +64,7 @@ Available users
 SELECT name FROM sys.sysusers;
 ```
 
-Login users
+List login users
 ```sql
 SELECT loginname FROM syslogins;
 ```
@@ -81,6 +81,10 @@ enum_impersonate
 
 Switch user
 ```sql
+EXECUTE AS LOGIN = '<user>';
+
+--- OR ---
+
 EXECUTE AS USER = '<user>';
 ```
 

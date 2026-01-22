@@ -154,14 +154,18 @@ impacket-mssqlclient | ARTIFACTS
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">system_user</span>;
 </span></span></code></pre></div><p>Available users</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> name <span style="color:#66d9ef">FROM</span> sys.sysusers;
-</span></span></code></pre></div><p>Login users</p>
+</span></span></code></pre></div><p>List login users</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> loginname <span style="color:#66d9ef">FROM</span> syslogins;
 </span></span></code></pre></div><p>System admin users</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> name <span style="color:#66d9ef">FROM</span> master.sys.server_principals <span style="color:#66d9ef">WHERE</span> IS_SRVROLEMEMBER(<span style="color:#e6db74">&#39;sysadmin&#39;</span>, name) <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
 </span></span></code></pre></div><p>Available users to impersonate</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>enum_impersonate
 </span></span></code></pre></div><p>Switch user</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">EXECUTE</span> <span style="color:#66d9ef">AS</span> <span style="color:#66d9ef">USER</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&lt;user&gt;&#39;</span>;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">EXECUTE</span> <span style="color:#66d9ef">AS</span> LOGIN <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&lt;user&gt;&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">--- OR ---
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">EXECUTE</span> <span style="color:#66d9ef">AS</span> <span style="color:#66d9ef">USER</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&lt;user&gt;&#39;</span>;
 </span></span></code></pre></div><hr>
     </div>
 </div>
