@@ -120,7 +120,7 @@ Report Basis | ARTIFACTS
             
             
                 <dt>reading time</dt>
-                <dd>1 minute</dd>
+                <dd>2 minutes</dd>
             
         </dl>
     </section>
@@ -128,54 +128,63 @@ Report Basis | ARTIFACTS
     <div>
         <h4 id="standardized-format-for-elegant-and-concise-report-writing">Standardized format for elegant and concise report writing</h4>
 <hr>
-<h4 id="001-past-tense">001: Past Tense</h4>
+<h4 id="001-retrospective-record-past-tense">001: Retrospective Record (Past Tense)</h4>
+<p>The past tense is employed exclusively for:</p>
 <ul>
-<li>Actions taken</li>
-<li>Findings</li>
-<li>Observations</li>
-<li>Adversary procedures</li>
+<li>Actions undertaken during the assessment.</li>
+<li>Observations made at the time of execution.</li>
+<li>Findings derived from those actions.</li>
+<li>Adversarial procedures successfully enacted.</li>
 </ul>
+<p>This tense establishes the historical certainty of events and confines them to the period of assessment.</p>
 <hr>
-<h4 id="002-present-tense">002: Present Tense</h4>
+<h4 id="002-declarative-condition-present-tense">002: Declarative Condition (Present Tense)</h4>
+<p>The present tense is reserved for:</p>
 <ul>
-<li>System properties</li>
-<li>Vulnerabilities</li>
-<li>Risks</li>
-<li>Impact</li>
+<li>System properties and configurations.</li>
+<li>Identified vulnerabilities.</li>
+<li>Associated risks.</li>
+<li>Business and technical impact.</li>
 </ul>
+<p>This tense affirms that the described conditions exist at the time of reporting, irrespective of when they were discovered.</p>
 <hr>
-<h4 id="003-structure-for-each-section">003: Structure (for each section)</h4>
-<ol>
-<li>Approach description</li>
-<li>Findings (if any)</li>
-<li>Commands (if any)</li>
-<li>Screenshot</li>
-</ol>
+<h4 id="003-sectional-construction">003: Sectional Construction</h4>
+<p>Each technical section shall be composed in the following order, where applicable:</p>
+<p><strong>Approach</strong></p>
 <ul>
-<li>Subtitles | Present</li>
-<li>Descriptions | Present</li>
-<li>Evidence | Past</li>
-<li>Methodology | Past</li>
+<li>A concise description of the method applied and observations, stated without conjecture.</li>
 </ul>
-<p>Preferred tone: <strong>passive void</strong></p>
+<p><strong>Finding</strong></p>
+<ul>
+<li>A factual statement of what was identified or achieved, if any such outcome occurred.</li>
+</ul>
+<p><strong>Execution Evidence</strong></p>
+<ul>
+<li>Commands or actions executed, presented as historical record rather than guidance.</li>
+</ul>
+<p><strong>Corroborative Material</strong></p>
+<ul>
+<li>Screenshots demonstrating the stated finding.</li>
+</ul>
+<p>Absence of findings shall not necessitate inclusion of all subsections.</p>
 <hr>
-<h4 id="004-core-rule">004: Core Rule</h4>
+<h4 id="004-grammatical-allocation">004: Grammatical Allocation</h4>
+<p>To preserve consistency and authority, the following allocations apply:</p>
 <ul>
-<li>Actions taken are written in past tense</li>
-<li>Vulnerabilities, risks and system properties are written in present tense</li>
+<li>Section Titles — Present tense</li>
+<li>System Descriptions — Present tense</li>
+<li>Methodological Narration — Past tense</li>
+<li>Evidence and Output — Past tense</li>
 </ul>
+<p>This division ensures that conditions are read as enduring, while acts remain confined to the assessment interval.</p>
 <hr>
-<h4 id="005-importance-of-tense">005: Importance of tense</h4>
-<p>Writing everything in present tense (“The tester enumerates…”, “The attacker gains…”) creates a narrative immediacy.</p>
+<h4 id="004-principle-of-relevance">004: Principle of Relevance</h4>
+<p>The report shall concern itself principally with successful attack paths.</p>
 <ul>
-<li>Reads like a walkthrough or blog post, not an assessment</li>
-<li>Can imply the issue is actively occurring</li>
-<li>Weakens evidentiary clarity in regulated or legal contexts</li>
+<li>Unsuccessful or non‑productive avenues are excluded from narration.</li>
+<li>Their execution may be acknowledged only at a methodological level, where necessary to demonstrate scope.</li>
 </ul>
-<p>Present tense is acceptable for education, not professional pentest deliverables.</p>
-<br>
-<p>Writing everything in past tense (“The vulnerability allowed…”, “The application exposed…”) subtly implies remediation may already have occurred.</p>
-<p>That ambiguity works against risk communication.</p>
+<p>This maintains clarity and avoids dilution of material risk.</p>
     </div>
 </div>
 
