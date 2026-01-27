@@ -99,7 +99,9 @@ hashcat -m 10900 hash.txt /usr/share/wordlists/rockyou.txt
 {{< screenshots "shot-006" >}}
 
 ---
-#### 006
+#### 006 Network Enumeration
+
+Further noticable observations regard network exposures. Automating the process to identifying available services 
 
 ---
 #### 007

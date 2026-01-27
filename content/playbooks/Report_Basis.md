@@ -37,7 +37,7 @@ Each technical section shall be composed in the following order, where applicabl
 - A concise description of the method applied and observations, stated without conjecture.
 
 **Finding**
-- A factual statement of what was identified or achieved, if any such outcome occurred.
+- A proof of what was identified or achieved, if any such outcome occurred.
 
 **Execution Evidence**
 - Commands or actions executed, presented as historical record rather than guidance.
