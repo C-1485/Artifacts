@@ -101,7 +101,7 @@ hashcat -m 10900 hash.txt /usr/share/wordlists/rockyou.txt
 ---
 #### 006: Domain Controller Objects
 
-Further examination revealed the exposure of multiple domain objects resident within the target environment. Through the automated enumeration of relative identifiers, numerous directory objects were identified, including several user-associated principals of potential operational interest. A subset of objects corresponding to user accounts was extracted and preserved within a text file `userobjects.txt` for subsequent authentication testing.
+Further examination revealed the exposure of multiple domain objects resident within the target environment. Through the automated enumeration of relative identifiers, numerous directory objects were identified, including several user-associated objects of operational interest. A subset of objects corresponding to user accounts was extracted and preserved within a text file `userobjects.txt` for subsequent authentication testing.
 ```bash
 nxc mssql 10.129.8.48 -u kevin -p 'iNa2we6haRj2gaw!' --local-auth --rid-brute
 ```
@@ -110,3 +110,15 @@ nxc mssql 10.129.8.48 -u kevin -p 'iNa2we6haRj2gaw!' --local-auth --rid-brute
 
 ---
 #### 007: Port 5985 Enumeration
+
+Based on the previously identified open ports, Windows Remote Management (WinRM) was determined to be the remaining service requiring further assessment. The WinRM module of the NetExec tool was therefore used to conduct authentication testing, leveraging the prepared wordlist of user-associated objects in combination with the recovered password. This process resulted in the successful identification of a valid user–credential pairing, confirming authenticated access to the service.
+- `[+] eighteen.htb\adam.scott:iloveyou1 (Pwn3d!)`
+```bash
+nxc winrm 10.129.8.48 -u userobjects.txt -p 'iloveyou1'
+```
+
+{{< screenshots "shot-009" >}}
+
+---
+#### 008: System Access
+
