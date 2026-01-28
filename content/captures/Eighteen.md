@@ -96,12 +96,17 @@ According to the description of the found repository, the converted value was ad
 hashcat -m 10900 hash.txt /usr/share/wordlists/rockyou.txt
 ```
 
-{{< screenshots "shot-006" >}}
+{{< screenshots "shot-007" >}}
 
 ---
-#### 006 Network Enumeration
+#### 006: Domain Controller Objects
 
-Further noticable observations regard network exposures. Automating the process to identifying available services 
+Further examination revealed the exposure of multiple domain objects resident within the target environment. Through the automated enumeration of relative identifiers, numerous directory objects were identified, including several user-associated principals of potential operational interest. A subset of objects corresponding to user accounts was extracted and preserved within a text file `userobjects.txt` for subsequent authentication testing.
+```bash
+nxc mssql 10.129.8.48 -u kevin -p 'iNa2we6haRj2gaw!' --local-auth --rid-brute
+```
+
+{{< screenshots "shot-008" >}}
 
 ---
-#### 007
+#### 007: Port 5985 Enumeration

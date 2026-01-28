@@ -203,13 +203,17 @@ Eighteen | ARTIFACTS
 </ul>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hashcat -m <span style="color:#ae81ff">10900</span> hash.txt /usr/share/wordlists/rockyou.txt
 </span></span></code></pre></div><p align="center">
-  <img src="/captures/screens/Eighteen/shot-006.png" alt="shot-006">
+  <img src="/captures/screens/Eighteen/shot-007.png" alt="shot-007">
 </p>
 <hr>
-<h4 id="006-network-enumeration">006 Network Enumeration</h4>
-<p>Further noticable observations regard network exposures. Automating the process to identifying available services</p>
+<h4 id="006-domain-controller-objects">006: Domain Controller Objects</h4>
+<p>Further examination revealed the exposure of multiple domain objects resident within the target environment. Through the automated enumeration of relative identifiers, numerous directory objects were identified, including several user-associated principals of potential operational interest. A subset of objects corresponding to user accounts was extracted and preserved within a text file <code>userobjects.txt</code> for subsequent authentication testing.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nxc mssql 10.129.8.48 -u kevin -p <span style="color:#e6db74">&#39;iNa2we6haRj2gaw!&#39;</span> --local-auth --rid-brute
+</span></span></code></pre></div><p align="center">
+  <img src="/captures/screens/Eighteen/shot-008.png" alt="shot-008">
+</p>
 <hr>
-<h4 id="007">007</h4>
+<h4 id="007-port-5985-enumeration">007: Port 5985 Enumeration</h4>
     </div>
 </div>
 
